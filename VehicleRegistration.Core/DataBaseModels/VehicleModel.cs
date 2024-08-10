@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
+// models for mapping with database vehicles table 
 namespace VehicleRegistration.Core.DataBaseModels
 {
     public class VehicleModel

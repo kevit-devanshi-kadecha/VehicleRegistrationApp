@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
+// model for adding the vehicle details when client calls the Add method 
 namespace VehicleRegistration.WebAPI.Models
 {
     public class Vehicle
@@ -19,6 +20,6 @@ namespace VehicleRegistration.WebAPI.Models
         public string VehicleClass { get; set; }
         [Required(ErrorMessage = "Provide the type of fuel the vehicle consumes")]
         public string FuelType { get; set; }
-        public ApplicationUser User { get; set; }
+        public User User { get; set; }
     }
 }

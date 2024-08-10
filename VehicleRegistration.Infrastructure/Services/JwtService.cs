@@ -31,7 +31,7 @@ namespace VehicleRegistration.Infrastructure.Services
             };
 
             // generateing hash based on key 
-            SymmetricSecurityKey securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Key"]));
+            SymmetricSecurityKey securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
             //using algo for token and this generates the hash value based on all information 
             SigningCredentials signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             //generating token 
@@ -43,8 +43,6 @@ namespace VehicleRegistration.Infrastructure.Services
             return new AuthenticationResponse()
             {
                 Token = token,
-                Email = user.UserEmail,
-                Password = user.PasswordHash,
                 Expiration = expiration,
             };
         }

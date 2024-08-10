@@ -2,6 +2,7 @@
 using VehicleRegistration.Core.DataBaseModels;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
 
 namespace VehicleRegistration.Infrastructure.Services
 {
@@ -16,14 +17,20 @@ namespace VehicleRegistration.Infrastructure.Services
         {
             _context = context;
         }
-        public Task<UserModel> GetUserByIdAsync(Guid UserId)
+        public async Task<UserModel> GetUserByIdAsync(Guid userId)
         {
-            throw new NotImplementedException();
+            return await _context.Users.FindAsync(userId);
         }
-        public Task<UserModel> GetUserByNameAsync(string UserName)
+        public async Task<UserModel> GetUserByNameAsync(string userName)
         {
-            throw new NotImplementedException();
+            return await _context.Users.FirstOrDefaultAsync(u => u.UserName == userName);
         }
+        public async Task<(string PasswordHash, string Salt)> GetPasswordHashAndSalt(string userName)
+        {
+            var result = await _context.Users.Where(u => u.UserName == userName).Select(u => new { u.PasswordHash, u.Salt }).FirstOrDefaultAsync();
+            return (result.PasswordHash, result.Salt);
+        }
+
         public async Task AddUser(UserModel user, string plainPassword)
         {
             // Generate password hash and salt
@@ -37,6 +44,23 @@ namespace VehicleRegistration.Infrastructure.Services
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
         }
+        public async Task<bool> AuthenticateUser(string userName, string plainPassword)
+        {
+            // from database 
+            var user = await GetUserByNameAsync(userName);
+            var (storedPasswordHash, storedSalt) = await GetPasswordHashAndSalt(userName);
+
+            // Convert the stored salt from Base64 string to byte array
+            var saltBytes = Convert.FromBase64String(storedSalt);
+
+            // Compute the hash of the provided plain password using the stored salt
+            var computedHash = ComputeHash(plainPassword, saltBytes);
+
+            // Compare the computed hash with the stored password hash
+            return computedHash == storedPasswordHash;
+        }
+
+
         // for creating password hash and salt 
         public (string PasswordHash, string Salt) CreatePasswordHash(string password)
         {

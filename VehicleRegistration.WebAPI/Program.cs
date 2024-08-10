@@ -14,6 +14,9 @@ namespace VehicleRegistration.WebAPI
             // Add services to the container.
 
             builder.Services.AddControllers();
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
+
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("Default"));
@@ -22,13 +25,16 @@ namespace VehicleRegistration.WebAPI
             builder.Services.AddScoped<IUserService, UserService>();
 
             // Service for Jwt Token 
-            
+            builder.Services.AddTransient<IJwtService, JwtService>();
 
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
 
             app.UseHttpsRedirection();
+
+            app.UseSwagger();
+            app.UseSwaggerUI();
 
             app.UseAuthorization();
 

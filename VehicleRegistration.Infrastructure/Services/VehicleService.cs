@@ -1,25 +1,41 @@
-﻿using VehicleRegistration.Core.DataBaseModels;
+﻿using Microsoft.EntityFrameworkCore;
+using VehicleRegistration.Core.DataBaseModels;
 using VehicleRegistration.Core.Interfaces;
 
 namespace VehicleRegistration.Infrastructure.Services
 {
     public class VehicleService : IVehicleService
     {
+        private readonly ApplicationDbContext _context;
+
+        public VehicleService(ApplicationDbContext context)
+        {
+            _context = context;
+        }
         public Task<VehicleModel> GetVehicleByIdAsync(Guid vehicleId)
         {
-            throw new NotImplementedException();
+            return _context.VehiclesDetails.FindAsync(vehicleId).AsTask();
         }
-        public async Task<VehicleModel> AddVehicle(VehicleModel vehicle)
+        public async Task<VehicleModel> AddVehicle(VehicleModel newVehicle)
         {
-            throw new NotImplementedException();
+            _context.VehiclesDetails.Add(newVehicle);
+            await _context.SaveChangesAsync();
+            return newVehicle;
         }
         public async Task<VehicleModel> EditVehicle(VehicleModel vehicle)
         {
-            throw new NotImplementedException();
+            _context.VehiclesDetails.Update(vehicle);
+            await _context.SaveChangesAsync();
+            return vehicle;
         }
         public async Task<VehicleModel> DeleteVehicle(Guid vehicleId)
         {
-            throw new NotImplementedException();
+            var vehicle = await _context.VehiclesDetails.FindAsync(vehicleId);
+            if (vehicle == null) return null;
+
+            _context.VehiclesDetails.Remove(vehicle);
+            await _context.SaveChangesAsync();
+            return vehicle;
         }
     }
 }
