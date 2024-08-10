@@ -1,6 +1,6 @@
 ﻿namespace VehicleRegistration.Core.DataBaseModels
 {
-    // for sending response to client after signup 
+    // for sending response to client after generating the token 
     public class AuthenticationResponse
     {
         public string UserName { get; set; } = string.Empty;

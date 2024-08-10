@@ -1,15 +1,21 @@
 ﻿using VehicleRegistration.Core.Interfaces;
 using VehicleRegistration.Core.DataBaseModels;
-using VehicleRegistration.Core.Services;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace VehicleRegistration.Core.Services
+namespace VehicleRegistration.Infrastructure.Services
 {
     public class UserService : IUserService
     {
         private const int SaltSize = 16; // Size of the salt in bytes
         private const int HashSize = 32; // SHA-256 produces a 32-byte hash
+
+        private readonly ApplicationDbContext _context;
+
+        public UserService(ApplicationDbContext context)
+        {
+            _context = context;
+        }
         public Task<UserModel> GetUserByIdAsync(Guid UserId)
         {
             throw new NotImplementedException();
@@ -18,9 +24,18 @@ namespace VehicleRegistration.Core.Services
         {
             throw new NotImplementedException();
         }
-        public Task AddUser(UserModel user)
+        public async Task AddUser(UserModel user, string plainPassword)
         {
-            throw new NotImplementedException();
+            // Generate password hash and salt
+            var (passwordHash, salt) = CreatePasswordHash(plainPassword);
+
+            // Set the hashed password and salt on the user model
+            user.PasswordHash = passwordHash;
+            user.Salt = salt;
+
+            // Add the user to the database
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
         }
         // for creating password hash and salt 
         public (string PasswordHash, string Salt) CreatePasswordHash(string password)
@@ -61,11 +76,3 @@ namespace VehicleRegistration.Core.Services
     }
 }
 
-//var hash = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-//    password: password,
-//    salt: salt,
-//    prf: KeyDerivation.HMACSHA256,
-//    iterationCount: 1000,
-//    numBytesRequested: 256 / 8
-//    ));
-//retu

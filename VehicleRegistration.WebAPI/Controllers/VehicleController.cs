@@ -2,7 +2,7 @@
 
 namespace VehicleRegistration.WebAPI.Controllers
 {
-    public class VehicleController : CustomControllerBase
+    public class VehicleController : ControllerBase
     {
 
     }

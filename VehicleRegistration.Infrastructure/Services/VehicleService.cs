@@ -1,7 +1,7 @@
 ﻿using VehicleRegistration.Core.DataBaseModels;
 using VehicleRegistration.Core.Interfaces;
 
-namespace VehicleRegistration.Core.Services
+namespace VehicleRegistration.Infrastructure.Services
 {
     public class VehicleService : IVehicleService
     {

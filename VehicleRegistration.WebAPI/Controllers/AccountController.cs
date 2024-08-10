@@ -6,7 +6,7 @@ using VehicleRegistration.WebAPI.Models;
 namespace VehicleRegistration.WebAPI.Controllers
 {
     [AllowAnonymous]
-    public class AccountController : CustomControllerBase
+    public class AccountController : ControllerBase
     {
         //private readonly IJwtService _jwtService;
         //public AccountController(IJwtService jwtService) 

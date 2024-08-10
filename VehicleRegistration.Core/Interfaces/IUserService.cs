@@ -6,7 +6,7 @@ namespace VehicleRegistration.Core.Interfaces
     {
         Task<UserModel> GetUserByIdAsync(Guid userId);
         Task<UserModel> GetUserByNameAsync(string userName);
-        Task AddUser(UserModel user);
+        Task AddUser(UserModel user, string plainPassword);
         (string PasswordHash, string Salt) CreatePasswordHash(string password);
     }
 }

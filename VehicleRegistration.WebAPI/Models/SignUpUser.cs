@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace VehicleRegistration.Core.DataBaseModels
+namespace VehicleRegistration.WebAPI.Models
 {
     public class SignUpUser
     {
@@ -10,7 +10,7 @@ namespace VehicleRegistration.Core.DataBaseModels
         [Required(ErrorMessage = "Email can't ne blank")]
         public string Email { get; set; }
         [Required]
-        public string Password { get; set; } 
-        
+        public string Password { get; set; }
+
     }
 }

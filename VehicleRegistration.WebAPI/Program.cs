@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using VehicleRegistration.Core.Interfaces;
 using VehicleRegistration.Infrastructure;
+using VehicleRegistration.Infrastructure.Services;
 
 namespace VehicleRegistration.WebAPI
 {
@@ -16,6 +18,8 @@ namespace VehicleRegistration.WebAPI
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("Default"));
             });
+
+            builder.Services.AddScoped<IUserService, UserService>();
 
             // Service for Jwt Token 
             
