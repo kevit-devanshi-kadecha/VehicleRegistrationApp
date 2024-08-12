@@ -15,8 +15,4 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\VehicleRegistration.Core\VehicleRegistration.Core.csproj" />
-  </ItemGroup>
-
 </Project>

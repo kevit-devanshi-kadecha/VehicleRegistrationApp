@@ -1,34 +1,37 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using VehicleRegistration.Core.DataBaseModels;
+using VehicleRegistration.Infrastructure.DataBaseModels;
 using VehicleRegistration.Core.Interfaces;
 using VehicleRegistration.WebAPI.Models;
+using System.Net.Http.Headers;
+using System.Security.Claims;
+using VehicleRegistration.Infrastructure;
 
 namespace VehicleRegistration.WebAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Authorize] 
+    [Route("api/Vehicle")]
     [ApiController]
-    [Authorize] // Ensures the user is authenticated
     public class VehicleController : ControllerBase
     {
         private readonly IVehicleService _vehicleService;
-
-        public VehicleController(IVehicleService vehicleService)
+        private readonly ApplicationDbContext _context;
+        public VehicleController(IVehicleService vehicleService, ApplicationDbContext context)
         {
-            _vehicleService = vehicleService;
+            _vehicleService = vehicleService; 
+            _context = context; 
         }
-        // show vehicle method list vehicles 
-
-
+        
         [HttpPost("add")]
         public async Task<IActionResult> AddNewVehicle([FromBody] Vehicle vehicle)
         {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             var newVehicle = new VehicleModel
             {
-                VehicleId = Guid.NewGuid(), // Auto-generate the VehicleId
+                VehicleId = Guid.NewGuid(), 
                 VehicleNumber = vehicle.VehicleNumber,
                 Description = vehicle.Description,
                 VehicleOwnerName = vehicle.VehicleOwnerName,
@@ -37,20 +40,23 @@ namespace VehicleRegistration.WebAPI.Controllers
                 Email = vehicle.Email,
                 VehicleClass = vehicle.VehicleClass,
                 FuelType = vehicle.FuelType,
-                // Assume the User information is set based on authentication context
+                UserId = int.Parse(userId)
             };
 
             var addedVehicle = await _vehicleService.AddVehicle(newVehicle);
+            //var addedVehicle = await _vehicleService.AddVehicle(newVehicle, username);
             return Ok(addedVehicle);
         }
 
         [HttpPut("edit")]
-        public async Task<IActionResult> EditVehicle([FromBody] Vehicle vehicle)
+        public async Task<IActionResult> EditVehicle(Vehicle vehicle)
         {
+
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var existingVehicle = await _vehicleService.GetVehicleByIdAsync(vehicle.VehicleId);
+
+            var existingVehicle = await _vehicleService.GetVehicleByIdAsync(vehicleId: vehicle.VehicleId);
             if (existingVehicle == null)
                 return NotFound();
 
@@ -76,8 +82,7 @@ namespace VehicleRegistration.WebAPI.Controllers
                 return NotFound();
 
             await _vehicleService.DeleteVehicle(id);
-
-            return NoContent(); // Successfully deleted
+            return Ok("deleted successfully"); 
         }
 
         [HttpGet("get/{id}")]

@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using VehicleRegistration.Core.DataBaseModels;
+using VehicleRegistration.Infrastructure.DataBaseModels;
 
 namespace VehicleRegistration.Infrastructure
 {
@@ -16,6 +16,7 @@ namespace VehicleRegistration.Infrastructure
             modelBuilder.Entity<UserModel>().HasKey(u => u.UserId);
             modelBuilder.Entity<VehicleModel>().HasKey(v => v.VehicleId);
             modelBuilder.Entity<VehicleModel>().HasOne(u => u.User).WithMany(v => v.Vehicles).HasForeignKey(i => i.UserId);
+            modelBuilder.Entity<VehicleModel>().Property(c => c.OwnerContactNumber).HasMaxLength(15);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace VehicleRegistration.Core.DataBaseModels
+﻿namespace VehicleRegistration.Infrastructure.DataBaseModels
 {
     // for sending response to client after generating the token 
     public class AuthenticationResponse

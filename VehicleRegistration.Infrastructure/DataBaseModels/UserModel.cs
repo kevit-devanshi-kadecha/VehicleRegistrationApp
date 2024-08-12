@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Globalization;
 
-namespace VehicleRegistration.Core.DataBaseModels
+namespace VehicleRegistration.Infrastructure.DataBaseModels
 {
     public class UserModel
     {

@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using VehicleRegistration.Core.DataBaseModels;
 using VehicleRegistration.Core.Interfaces;
+using VehicleRegistration.Infrastructure.DataBaseModels;
 using VehicleRegistration.WebAPI.Models;
 
 namespace VehicleRegistration.WebAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [AllowAnonymous]
     [ApiController]
     public class AccountController : ControllerBase
     {
@@ -19,6 +19,7 @@ namespace VehicleRegistration.WebAPI.Controllers
             _userService = userService;
             _jwttokenService = jwtService;
         }
+
         [HttpPost("signup")]
         public async Task<IActionResult> SignUp([FromBody] User user)
         {
@@ -38,15 +39,16 @@ namespace VehicleRegistration.WebAPI.Controllers
             };
 
             await _userService.AddUser(newUser, user.Password);
-            var authenticationResponse = _jwttokenService.CreateJwtToken(newUser); // added jwt creation 
+            var authenticationResponse = _jwttokenService.CreateJwtToken(newUser);  
 
             return Ok(new
             {
                 JwtToken = authenticationResponse.Token,
                 UserEmail = authenticationResponse.Email,
                 TokenExpiration = authenticationResponse.Expiration
-            }); ;
+            });
         }
+
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] Login login)
         {
@@ -64,7 +66,6 @@ namespace VehicleRegistration.WebAPI.Controllers
             return Ok(new
             {
                 JwtToken = tokenResponse.Token,
-                UserEmail = tokenResponse.Email,
                 TokenExpiration = tokenResponse.Expiration
             });
         }

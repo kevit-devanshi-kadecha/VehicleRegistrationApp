@@ -1,4 +1,4 @@
-﻿using VehicleRegistration.Core.DataBaseModels;
+﻿using VehicleRegistration.Infrastructure.DataBaseModels;
 
 namespace VehicleRegistration.Core.Interfaces
 {

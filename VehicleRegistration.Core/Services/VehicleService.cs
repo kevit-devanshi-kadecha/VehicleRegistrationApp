@@ -1,23 +1,32 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using VehicleRegistration.Core.DataBaseModels;
+using VehicleRegistration.Infrastructure.DataBaseModels;
 using VehicleRegistration.Core.Interfaces;
+using VehicleRegistration.Infrastructure;
 
-namespace VehicleRegistration.Infrastructure.Services
+namespace VehicleRegistration.Core.Services
 {
     public class VehicleService : IVehicleService
     {
         private readonly ApplicationDbContext _context;
-
-        public VehicleService(ApplicationDbContext context)
+        private readonly IUserService _userService;
+        public VehicleService(ApplicationDbContext context, IUserService userService)
         {
             _context = context;
+            _userService = userService;
         }
         public Task<VehicleModel> GetVehicleByIdAsync(Guid vehicleId)
         {
             return _context.VehiclesDetails.FindAsync(vehicleId).AsTask();
         }
+        //public List<VehicleModel> GetVehicleDetails()
+        //{
+        //    List<VehicleModel> vehicledetails = _context.VehiclesDetails.Select(v => new VehicleModel { VehicleNumber = v.VehicleNumber, Description = v.Description, VehicleClass = v.VehicleClass, FuelType = v.FuelType }).ToList();
+        //    return vehicledetails;
+        //}
         public async Task<VehicleModel> AddVehicle(VehicleModel newVehicle)
         {
+            //var userId = await _userService.GetUserIdByUsernameAsync(username);
+            //newVehicle.UserId = userId;
             _context.VehiclesDetails.Add(newVehicle);
             await _context.SaveChangesAsync();
             return newVehicle;

@@ -5,7 +5,7 @@ namespace VehicleRegistration.WebAPI.Models
 {
     public class Vehicle
     {
-        public Guid VehicleId = new Guid();
+        public Guid VehicleId { get; set; } 
         [Required(ErrorMessage = "RTO register vehicle number is necessary")]
         public string VehicleNumber { get; set; }
         public string? Description { get; set; }
@@ -20,6 +20,5 @@ namespace VehicleRegistration.WebAPI.Models
         public string VehicleClass { get; set; }
         [Required(ErrorMessage = "Provide the type of fuel the vehicle consumes")]
         public string FuelType { get; set; }
-        public User User { get; set; }
     }
 }
