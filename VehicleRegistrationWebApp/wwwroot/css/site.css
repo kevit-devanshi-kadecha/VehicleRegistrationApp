@@ -1,0 +1,96 @@
+html {
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    height: 100vh;
+}
+
+.login-container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 6px;
+    width: 300px;
+    border: 1px solid #008ba0;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-container input[type="text"],
+.login-container input[type="password"] {
+    width: calc(100% - 40px);
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border: 1px solid #008ba0;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px;
+    float: left;
+    background-color: white;
+}
+
+.login-container .toggle-password {
+    background-color: transparent;
+    border: none;
+    width: 40px;
+    height: 40px;
+    float: right;
+    cursor: pointer;
+    position: relative;
+}
+
+.login-container .toggle-password img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: auto;
+}
+
+.login-container input[type="submit"] {
+    width: 100%;
+    background-color: #116f86;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    margin-top: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.login-container input[type="submit"]:hover {
+    background-color: #2abb4b;
+}
+.login-container .signup-link {
+    text-align: center;
+    margin-top: 10px;
+}
+.login-container .signup-link a {
+    color: #116f86;
+    text-decoration: none;
+}
+
+h1 {
+    color: #0e6b5f;
+}
