@@ -14,33 +14,36 @@ namespace VehicleRegistration.Core.Services
             _context = context;
             _userService = userService;
         }
+        public async Task<List<VehicleModel>> GetVehicleDetails(string userId)
+        {
+            List<VehicleModel> vehicleDetails = _context.VehiclesDetails.Where( v => v.UserId == int.Parse(userId)).ToList()!;
+            return vehicleDetails;
+        }
+
         public Task<VehicleModel> GetVehicleByIdAsync(Guid vehicleId)
         {
             return _context.VehiclesDetails.FindAsync(vehicleId).AsTask();
         }
-        //public List<VehicleModel> GetVehicleDetails()
-        //{
-        //    List<VehicleModel> vehicledetails = _context.VehiclesDetails.Select(v => new VehicleModel { VehicleNumber = v.VehicleNumber, Description = v.Description, VehicleClass = v.VehicleClass, FuelType = v.FuelType }).ToList();
-        //    return vehicledetails;
-        //}
+
         public async Task<VehicleModel> AddVehicle(VehicleModel newVehicle)
         {
-            //var userId = await _userService.GetUserIdByUsernameAsync(username);
-            //newVehicle.UserId = userId;
             _context.VehiclesDetails.Add(newVehicle);
             await _context.SaveChangesAsync();
             return newVehicle;
         }
+
         public async Task<VehicleModel> EditVehicle(VehicleModel vehicle)
         {
             _context.VehiclesDetails.Update(vehicle);
             await _context.SaveChangesAsync();
             return vehicle;
         }
+
         public async Task<VehicleModel> DeleteVehicle(Guid vehicleId)
         {
             var vehicle = await _context.VehiclesDetails.FindAsync(vehicleId);
-            if (vehicle == null) return null;
+            if (vehicle == null) 
+                return null;
 
             _context.VehiclesDetails.Remove(vehicle);
             await _context.SaveChangesAsync();

@@ -9,8 +9,15 @@ using VehicleRegistration.Infrastructure;
 
 namespace VehicleRegistration.WebAPI
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class Program
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="args"></param>
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
@@ -61,7 +68,7 @@ namespace VehicleRegistration.WebAPI
                 {
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8
-                    .GetBytes(builder.Configuration.GetSection("Jwt:Key").Value)),
+                    .GetBytes(builder.Configuration.GetSection("Jwt:Key").Value!)),
                     ValidateIssuer = false,
                     ValidateAudience = false
                 };

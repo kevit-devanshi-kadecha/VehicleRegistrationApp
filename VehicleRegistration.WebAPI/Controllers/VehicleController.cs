@@ -21,7 +21,15 @@ namespace VehicleRegistration.WebAPI.Controllers
             _vehicleService = vehicleService; 
             _context = context; 
         }
-        
+
+        [HttpGet("getAllVehicles")]
+        public async Task<IActionResult> GetAllVehicles()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var vehicles = await _vehicleService.GetVehicleDetails(userId);
+            return Ok(vehicles);
+        }
+
         [HttpPost("add")]
         public async Task<IActionResult> AddNewVehicle([FromBody] Vehicle vehicle)
         {
@@ -40,12 +48,11 @@ namespace VehicleRegistration.WebAPI.Controllers
                 Email = vehicle.Email,
                 VehicleClass = vehicle.VehicleClass,
                 FuelType = vehicle.FuelType,
-                UserId = int.Parse(userId)
+                UserId = int.Parse(userId!)
             };
 
-            var addedVehicle = await _vehicleService.AddVehicle(newVehicle);
-            //var addedVehicle = await _vehicleService.AddVehicle(newVehicle, username);
-            return Ok(addedVehicle);
+            await _vehicleService.AddVehicle(newVehicle);
+            return Ok("Vehicle Added Successfully");
         }
 
         [HttpPut("edit")]
@@ -54,7 +61,6 @@ namespace VehicleRegistration.WebAPI.Controllers
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-
 
             var existingVehicle = await _vehicleService.GetVehicleByIdAsync(vehicleId: vehicle.VehicleId);
             if (existingVehicle == null)
@@ -69,9 +75,8 @@ namespace VehicleRegistration.WebAPI.Controllers
             existingVehicle.VehicleClass = vehicle.VehicleClass;
             existingVehicle.FuelType = vehicle.FuelType;
 
-            var updatedVehicle = await _vehicleService.EditVehicle(existingVehicle);
-
-            return Ok(updatedVehicle);
+            await _vehicleService.EditVehicle(existingVehicle);
+            return Ok("Vehicle Details Edited Successfully");
         }
 
         [HttpDelete("delete/{id}")]
@@ -82,7 +87,7 @@ namespace VehicleRegistration.WebAPI.Controllers
                 return NotFound();
 
             await _vehicleService.DeleteVehicle(id);
-            return Ok("deleted successfully"); 
+            return Ok("Vehicle Deleted successfully"); 
         }
 
         [HttpGet("get/{id}")]

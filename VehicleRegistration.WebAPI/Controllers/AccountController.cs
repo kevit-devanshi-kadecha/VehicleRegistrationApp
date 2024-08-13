@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Azure.Messaging;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using VehicleRegistration.Core.Interfaces;
@@ -14,12 +15,12 @@ namespace VehicleRegistration.WebAPI.Controllers
         private readonly IUserService _userService;
         private readonly IJwtService _jwttokenService;
 
-        public AccountController(IUserService userService,IJwtService jwtService)
+        public AccountController(IUserService userService, IJwtService jwtService)
         {
             _userService = userService;
             _jwttokenService = jwtService;
         }
-
+        
         [HttpPost("signup")]
         public async Task<IActionResult> SignUp([FromBody] User user)
         {
@@ -39,14 +40,7 @@ namespace VehicleRegistration.WebAPI.Controllers
             };
 
             await _userService.AddUser(newUser, user.Password);
-            var authenticationResponse = _jwttokenService.CreateJwtToken(newUser);  
-
-            return Ok(new
-            {
-                JwtToken = authenticationResponse.Token,
-                UserEmail = authenticationResponse.Email,
-                TokenExpiration = authenticationResponse.Expiration
-            });
+            return Ok("Successfully Signed In \nWelcome to Vehicle Registration App");
         }
 
         [HttpPost("login")]
@@ -65,6 +59,7 @@ namespace VehicleRegistration.WebAPI.Controllers
 
             return Ok(new
             {
+                Message = "Logged In Successfully",
                 JwtToken = tokenResponse.Token,
                 TokenExpiration = tokenResponse.Expiration
             });
