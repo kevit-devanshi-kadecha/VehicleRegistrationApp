@@ -9,10 +9,12 @@ namespace VehicleRegistrationWebApp.Services
     public class AccountService 
     {
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly IConfiguration _configuration;
 
-        public AccountService(IHttpClientFactory httpClientFactory)
+        public AccountService(IHttpClientFactory httpClientFactory, IConfiguration configuration)
         {
             _httpClientFactory = httpClientFactory;
+            _configuration = configuration;
         }
 
         public async Task<string> SignUpAsync(SignUpViewModel model)
@@ -21,21 +23,22 @@ namespace VehicleRegistrationWebApp.Services
             using (HttpClient httpClient = _httpClientFactory.CreateClient())
             {
                 var content = new StringContent(jsonStr, Encoding.UTF8, "application/json");
-                HttpResponseMessage httpResponseMessage = await httpClient.PostAsync("https://localhost:7095/signup", content);
+                HttpResponseMessage httpResponseMessage = await httpClient.PostAsync(_configuration["ApiBaseAddress"] + "signup", content);
                 string response = await httpResponseMessage.Content.ReadAsStringAsync();
                 return response;
             }
         }
-        public async Task<LoginViewModel> LoginAsync(LoginViewModel model)
+        public async Task<TokenResponse> LoginAsync(LoginViewModel model, HttpContext httpContext)
         {
             var jsonStr = JsonConvert.SerializeObject(model);
             using (HttpClient httpClient = _httpClientFactory.CreateClient())
             {
                 var content = new StringContent(jsonStr, Encoding.UTF8, "application/json");
-                HttpResponseMessage httpResponseMessage = await httpClient.PostAsync("https://localhost:7095/login", content);
+                HttpResponseMessage httpResponseMessage = await httpClient.PostAsync(_configuration["ApiBaseAddress"] + "login", content);
                 string response = await httpResponseMessage.Content.ReadAsStringAsync();
-
-                LoginViewModel loginResponse = JsonConvert.DeserializeObject<LoginViewModel>(response);
+                
+                TokenResponse loginResponse = JsonConvert.DeserializeObject<TokenResponse>(response);
+                httpContext.Session.SetString("Token", loginResponse.JwtToken);
                 return loginResponse;
             }
         }

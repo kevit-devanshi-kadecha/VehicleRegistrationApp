@@ -28,7 +28,12 @@ namespace VehicleRegistration.WebAPI.Controllers
                 return BadRequest(ModelState);
 
             // Check if the username already exists
-            var existingUser = await _userService.GetUserByNameAsync(user.UserName);
+            //var existingUser = await _userService.GetUserByNameAsync(user.UserName);
+            //if (existingUser != null)
+            //    return Conflict(new { Message = "Username already exists" });
+
+            // Check if the UserEmail already exists 
+            var existingUser = await _userService.GetUserBYEmaiIdAsync(user.Email);
             if (existingUser != null)
                 return Conflict(new { Message = "Username already exists" });
 

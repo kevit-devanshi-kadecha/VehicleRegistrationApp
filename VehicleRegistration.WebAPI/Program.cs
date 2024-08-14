@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using VehicleRegistration.Core.Interfaces;
+//using VehicleRegistration.Core.Middleware;
 using VehicleRegistration.Core.Services;
 using VehicleRegistration.Infrastructure;
 
@@ -61,18 +62,21 @@ namespace VehicleRegistration.WebAPI
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
             });
-            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(options =>
+            builder.Services.AddAuthentication(options =>
             {
-                options.TokenValidationParameters = new TokenValidationParameters
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;    
+            }).AddJwtBearer(options =>
                 {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8
-                    .GetBytes(builder.Configuration.GetSection("Jwt:Key").Value!)),
-                    ValidateIssuer = false,
-                    ValidateAudience = false
-                };
-            });
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8
+                        .GetBytes(builder.Configuration.GetSection("Jwt:Key").Value!)),
+                        ValidateIssuer = false,
+                        ValidateAudience = false
+                    };
+                });
 
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
             {
@@ -83,7 +87,7 @@ namespace VehicleRegistration.WebAPI
             builder.Services.AddScoped<IVehicleService, VehicleService>();
 
             // Service for Jwt Token 
-            builder.Services.AddTransient<IJwtService, JwtService>();
+            builder.Services.AddSingleton<IJwtService, JwtService>();
             
             var app = builder.Build();
 
@@ -96,6 +100,7 @@ namespace VehicleRegistration.WebAPI
 
             app.MapControllers();
             
+
             app.Run();
         }
     }

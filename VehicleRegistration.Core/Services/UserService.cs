@@ -24,11 +24,11 @@ namespace VehicleRegistration.Core.Services
             return result!;
         }
 
-        //public async Task<int> GetUserIdByUsernameAsync(string userName)
-        //{
-        //    var user = await _context.Users.Where(u => u.UserName == userName).Select(u => u.UserId).FirstOrDefaultAsync();
-        //    return user;
-        //}
+        public async Task<UserModel> GetUserBYEmaiIdAsync(string userEmail)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserEmail == userEmail);
+            return user!;
+        }
 
         public async Task<(string PasswordHash, string Salt)> GetPasswordHashAndSalt(string userName)
         {

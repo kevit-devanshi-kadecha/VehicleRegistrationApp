@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Net.Http.Headers;
 using VehicleRegistrationWebApp.Services;
 
 namespace VehicleRegistrationWebApp
@@ -9,10 +11,18 @@ namespace VehicleRegistrationWebApp
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddControllersWithViews();
             builder.Services.AddHttpClient();
+           
+            builder.Services.AddDistributedMemoryCache();
             builder.Services.AddScoped<AccountService>();
             builder.Services.AddScoped<VehicleService>();
+            builder.Services.AddSession( options =>
+            {
+                options.IdleTimeout = TimeSpan.FromHours(5);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
+            builder.Services.AddControllersWithViews();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -26,9 +36,8 @@ namespace VehicleRegistrationWebApp
             app.UseStaticFiles();
 
             app.UseRouting();
-
-            app.UseAuthorization();
-
+         
+            app.UseSession();
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Login}");

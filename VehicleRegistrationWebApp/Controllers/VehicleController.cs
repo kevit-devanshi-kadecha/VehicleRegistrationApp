@@ -1,32 +1,41 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 using VehicleRegistrationWebApp.Models;
 using VehicleRegistrationWebApp.Services;
 
 namespace VehicleRegistrationWebApp.Controllers
 {
-    //for accessing the API 
-    [Route("api/[controller]")]
     public class VehicleController : Controller
     {
         private readonly VehicleService _vehicleService;
         private readonly IHttpClientFactory _httpClientFactory;
-        private readonly ILogger _logger;
-        public VehicleController(IHttpClientFactory httpClientFactory, VehicleService vehicleService, ILogger logger)
+        public VehicleController(IHttpClientFactory httpClientFactory, VehicleService vehicleService)
         {
             _httpClientFactory = httpClientFactory;
             _vehicleService = vehicleService;
-            _logger = logger;
         }
         [HttpGet("getVehicles")]
         public async Task<IActionResult> GetVehiclesDetails()
         {
-            var vehicles = await _vehicleService.GetVehicles();
+            string jwtToken = HttpContext.Session.GetString("Token");
+            if (string.IsNullOrEmpty(jwtToken) ) 
+            {
+               return RedirectToAction("Login", "Home");
+            }
+
+            var vehicles = await _vehicleService.GetVehicles(jwtToken);
             return View(vehicles);
         }
 
         [HttpPost]
-        public IActionResult AddVehicleDetails()
+        public async Task<IActionResult> AddVehicleDetails()
         {
+            string jwtToken = HttpContext.Session.GetString("Token");
+            if (string.IsNullOrEmpty(jwtToken))
+            {
+                return RedirectToAction("Login", "Home");
+            }
             
             return View();
         }
@@ -34,18 +43,25 @@ namespace VehicleRegistrationWebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateVehicleDetails()
         {
+            string jwtToken = HttpContext.Session.GetString("Token");
+            if (string.IsNullOrEmpty(jwtToken))
+            {
+                return RedirectToAction("Login", "Home");
+            }
             return View();
         }
 
         [HttpPost]
         public IActionResult DeleteVehicle()
         {
+            string jwtToken = HttpContext.Session.GetString("Token");
             return View();
         }
 
         [HttpGet]
         public async Task<IActionResult> GetVehicleById()
         {
+            string jwtToken = HttpContext.Session.GetString("Token");
             return View();
         }
     }

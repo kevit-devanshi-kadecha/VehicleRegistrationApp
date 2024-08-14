@@ -1,4 +1,46 @@
 ﻿@model IEnumerable<VehicleRegistrationWebApp.Models.VehicleViewModel>
-@{
 
+@{
+    ViewData["Title"] = "All Vehicles";
 }
+
+<h1>@ViewData["Title"]</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Vehicle Number</th>
+            <th>Description</th>
+            <th>Owner Name</th>
+            <th>Address</th>
+            <th>Owner Contact Number</th>
+            <th>Email</th>
+            <th>Vehicle Class</th>
+            <th>Fuel Type</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            foreach (var vehicle in Model)
+            {
+                <tr>
+                    <td>@vehicle.VehicleNumber</td>
+                    <td>@vehicle.Description</td>
+                    <td>@vehicle.VehicleOwnerName</td>
+                    <td>@vehicle.OwnerAddress</td>
+                    <td>@vehicle.OwnerContactNumber</td>
+                    <td>@vehicle.Email</td>
+                    <td>@vehicle.VehicleClass</td>
+                    <td>@vehicle.FuelType</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="8" class="text-center">No vehicles found.</td>
+            </tr>
+        }
+    </tbody>
+</table>
