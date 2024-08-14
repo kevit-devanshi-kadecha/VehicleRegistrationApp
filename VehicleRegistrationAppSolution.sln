@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VehicleRegistration.Core", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VehicleRegistration.Infrastructure", "VehicleRegistration.Infrastructure\VehicleRegistration.Infrastructure.csproj", "{7B1DD9AD-1D3C-439C-A76F-DB5A1BA19BE1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VehicleRegistrationWebApp", "VehicleRegistrationWebApp\VehicleRegistrationWebApp.csproj", "{9C0A9B04-7523-4513-8664-7C1CC35C689C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VehicleRegistrationWebApp", "VehicleRegistrationWebApp\VehicleRegistrationWebApp.csproj", "{9C0A9B04-7523-4513-8664-7C1CC35C689C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

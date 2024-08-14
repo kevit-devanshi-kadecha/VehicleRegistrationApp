@@ -1,0 +1,72 @@
+﻿@model VehicleRegistrationWebApp.Models.VehicleViewModel
+
+@{
+    ViewData["Title"] = "Update Vehicle Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Edit vehicle Data</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-controller="Vehicle" asp-action="EditVehicleDetails" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="VehicleId" class="control-label"></label>
+                <input asp-for="VehicleId" class="form-control" />
+                <span asp-validation-for="VehicleId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="VehicleNumber" class="control-label"></label>
+                <input asp-for="VehicleNumber" class="form-control" />
+                <span asp-validation-for="VehicleNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="VehicleOwnerName" class="control-label"></label>
+                <input asp-for="VehicleOwnerName" class="form-control" />
+                <span asp-validation-for="VehicleOwnerName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="OwnerAddress" class="control-label"></label>
+                <input asp-for="OwnerAddress" class="form-control" />
+                <span asp-validation-for="OwnerAddress" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="OwnerContactNumber" class="control-label"></label>
+                <input asp-for="OwnerContactNumber" class="form-control" />
+                <span asp-validation-for="OwnerContactNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="VehicleClass" class="control-label"></label>
+                <input asp-for="VehicleClass" class="form-control" />
+                <span asp-validation-for="VehicleClass" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FuelType" class="control-label"></label>
+                <input asp-for="FuelType" class="form-control" />
+                <span asp-validation-for="FuelType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+<div>
+    <a asp-action="GetVehiclesDetails">Back To vehicle Details </a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

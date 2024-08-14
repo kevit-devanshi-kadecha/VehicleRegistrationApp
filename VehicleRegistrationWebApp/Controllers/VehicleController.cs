@@ -28,41 +28,78 @@ namespace VehicleRegistrationWebApp.Controllers
             return View(vehicles);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> AddVehicleDetails()
+        [HttpGet]
+        public IActionResult AddVehicleDetails()
+        {
+            return View();
+        }
+
+        [HttpPost("add")]
+        public async Task<IActionResult> AddVehicleDetails(VehicleViewModel model)
         {
             string jwtToken = HttpContext.Session.GetString("Token");
             if (string.IsNullOrEmpty(jwtToken))
             {
                 return RedirectToAction("Login", "Home");
             }
-            
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> UpdateVehicleDetails()
-        {
-            string jwtToken = HttpContext.Session.GetString("Token");
-            if (string.IsNullOrEmpty(jwtToken))
-            {
-                return RedirectToAction("Login", "Home");
-            }
-            return View();
-        }
-
-        [HttpPost]
-        public IActionResult DeleteVehicle()
-        {
-            string jwtToken = HttpContext.Session.GetString("Token");
+            await _vehicleService.AddVehicles(model, jwtToken);
             return View();
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetVehicleById()
+        public IActionResult EditVehicleDetails()
+        {
+            return View();
+        }
+
+        [HttpPut("editVehicle")]
+        public async Task<IActionResult> EditVehicleDetails(VehicleViewModel model)
         {
             string jwtToken = HttpContext.Session.GetString("Token");
+            if (string.IsNullOrEmpty(jwtToken))
+            {
+                return RedirectToAction("Login", "Home");
+            }
+            await _vehicleService.UpdateVehicles(model, jwtToken);
             return View();
+        }
+
+        [HttpGet]
+        public IActionResult DeleteVehicle()
+        {
+            return View();
+        }
+
+        [HttpDelete("deleteVehicle/{vehicleId}")]
+        public async Task<IActionResult> DeleteVehicle(Guid vehicleId)
+        {
+            string jwtToken = HttpContext.Session.GetString("Token");
+            if (string.IsNullOrEmpty(jwtToken))
+            {
+                return RedirectToAction("Login", "Home");
+            }
+
+            await _vehicleService.DeleteVehicles(vehicleId, jwtToken);
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult GetVehicleById()
+        {
+            return View();
+        }
+
+        [HttpGet("getVehiclebyId/{vehicleId}")]
+        public async Task<IActionResult> GetVehicleById(Guid vehicleId)
+        {
+            string jwtToken = HttpContext.Session.GetString("Token");
+            if (string.IsNullOrEmpty(jwtToken))
+            {
+                return RedirectToAction("Login", "Home");
+            }
+
+            var vehicle = await _vehicleService.GetVehicleById(vehicleId, jwtToken);
+            return View(vehicle);
         }
     }
 }

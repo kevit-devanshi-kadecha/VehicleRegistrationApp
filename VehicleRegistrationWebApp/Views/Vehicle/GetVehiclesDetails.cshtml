@@ -17,6 +17,7 @@
             <th>Email</th>
             <th>Vehicle Class</th>
             <th>Fuel Type</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -33,14 +34,25 @@
                     <td>@vehicle.Email</td>
                     <td>@vehicle.VehicleClass</td>
                     <td>@vehicle.FuelType</td>
+                    <td>
+                        <a asp-controller="Vehicle" asp-action="EditVehicle" asp-route-id="@vehicle.VehicleId" class="btn btn-warning btn-sm">Edit</a>
+                        <a asp-controller="Vehicle" asp-action="DeleteVehicle" asp-route-id="@vehicle.VehicleId" class="btn btn-warning btn-sm">Delete</a>
+                    </td>
                 </tr>
             }
         }
         else
         {
             <tr>
-                <td colspan="8" class="text-center">No vehicles found.</td>
+                <td colspan="9" class="text-center">No vehicles found.</td>
             </tr>
         }
     </tbody>
 </table>
+
+<div>
+    <h3>Add New Vehicle</h3>
+    <button>
+        <a asp-area="" asp-controller="Vehicle" asp-action="AddVehicleDetails">Add Vehicle</a>
+    </button>
+</div>
