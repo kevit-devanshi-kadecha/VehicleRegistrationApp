@@ -32,11 +32,30 @@ namespace VehicleRegistration.Core.Services
             return newVehicle;
         }
 
-        public async Task<VehicleModel> EditVehicle(VehicleModel vehicle)
+        public async Task<VehicleModel> EditVehicle(VehicleModel vehicle, string userId)
         {
-            _context.VehiclesDetails.Update(vehicle);
+            var existingVehicle = await _context.VehiclesDetails.FindAsync(vehicle.VehicleId);
+            if (existingVehicle == null) return null;
+
+            var hasChanges = typeof(VehicleModel).GetProperties()
+                .Any(prop => prop.GetValue(existingVehicle)?.ToString() != prop.GetValue(vehicle)?.ToString());
+
+            if (!hasChanges)
+            {
+                return null;
+            }
+
+            // Update the existing vehicle details with new values 
+            foreach (var prop in typeof(VehicleModel).GetProperties())
+            {
+                var newValue = prop.GetValue(vehicle);
+                prop.SetValue(existingVehicle, newValue);
+            }
+
+            _context.VehiclesDetails.Update(existingVehicle);
             await _context.SaveChangesAsync();
-            return vehicle;
+
+            return existingVehicle;
         }
 
         public async Task<VehicleModel> DeleteVehicle(Guid vehicleId)

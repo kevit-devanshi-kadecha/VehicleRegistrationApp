@@ -5,7 +5,7 @@ namespace VehicleRegistrationWebApp.Models
 {
     public class VehicleViewModel
     {
-        public Guid VehicleId { get; set; }
+        public Guid VehicleId { get; set; } 
 
         [DisplayName("Vehicle Number")]
         [Required(ErrorMessage = "RTO register vehicle number is necessary")]
@@ -36,5 +36,7 @@ namespace VehicleRegistrationWebApp.Models
         [DisplayName("Fuel Type")]
         [Required(ErrorMessage = "Provide the type of fuel the vehicle consumes")]
         public string FuelType { get; set; }
+
+        public int UserId { get; set; }
     }
 }

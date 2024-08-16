@@ -48,8 +48,22 @@ namespace VehicleRegistrationWebApp.Controllers
                 return View(model);
             }
             var result = await _accountService.LoginAsync(model, HttpContext);
-            HttpContext.Session.SetString("Token", result.JwtToken);
-            return RedirectToAction("GetVehiclesDetails", "Vehicle");
+            if (!string.IsNullOrEmpty(result.Message))
+            {
+                if (result.Message.Contains("Logged In Successfully"))
+                {
+                    HttpContext.Session.SetString("Token", result.JwtToken);
+                    return RedirectToAction("GetVehiclesDetails", "Vehicle");
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, result.Message);
+                    return View(model); 
+                }
+            }
+
+            ModelState.AddModelError(string.Empty, "Unexpected error during login.");
+            return View(model);
         }
 
         public IActionResult Privacy()

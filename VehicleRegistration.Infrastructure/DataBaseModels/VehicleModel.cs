@@ -7,7 +7,7 @@ namespace VehicleRegistration.Infrastructure.DataBaseModels
     public class VehicleModel
     {
         [Key]
-        public Guid VehicleId = new Guid();
+        public Guid VehicleId { get; set; }
         [MaxLength(50)]
         public string VehicleNumber { get; set; }
         [MaxLength(150)]
@@ -30,4 +30,5 @@ namespace VehicleRegistration.Infrastructure.DataBaseModels
         public UserModel User { get; set; }
         public int UserId { get; set; }
     }
+
 }

@@ -39,7 +39,7 @@ namespace VehicleRegistration.WebAPI.Controllers
 
             var newVehicle = new VehicleModel
             {
-                VehicleId = Guid.NewGuid(), 
+                VehicleId = new Guid(), 
                 VehicleNumber = vehicle.VehicleNumber,
                 Description = vehicle.Description,
                 VehicleOwnerName = vehicle.VehicleOwnerName,
@@ -56,26 +56,37 @@ namespace VehicleRegistration.WebAPI.Controllers
         }
 
         [HttpPut("edit")]
-        public async Task<IActionResult> EditVehicle(Vehicle vehicle)
+        public async Task<IActionResult> EditVehicle([FromBody] Vehicle vehicle)
         {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+            {
+                return Unauthorized("User not authenticated.");
+            }
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var existingVehicle = await _vehicleService.GetVehicleByIdAsync(vehicleId: vehicle.VehicleId);
-            if (existingVehicle == null)
-                return NotFound();
+            var vehicleModel = new VehicleModel
+            {
+                VehicleId = vehicle.VehicleId,
+                VehicleNumber = vehicle.VehicleNumber,
+                Description = vehicle.Description,
+                VehicleOwnerName = vehicle.VehicleOwnerName,
+                OwnerAddress = vehicle.OwnerAddress,
+                OwnerContactNumber = vehicle.OwnerContactNumber,
+                Email = vehicle.Email,
+                VehicleClass = vehicle.VehicleClass,
+                FuelType = vehicle.FuelType,
+                UserId = int.Parse(userId) 
+            };
+            var updatedVehicle = await _vehicleService.EditVehicle(vehicleModel , userId);
 
-            existingVehicle.VehicleNumber = vehicle.VehicleNumber;
-            existingVehicle.Description = vehicle.Description;
-            existingVehicle.VehicleOwnerName = vehicle.VehicleOwnerName;
-            existingVehicle.OwnerAddress = vehicle.OwnerAddress;
-            existingVehicle.OwnerContactNumber = vehicle.OwnerContactNumber;
-            existingVehicle.Email = vehicle.Email;
-            existingVehicle.VehicleClass = vehicle.VehicleClass;
-            existingVehicle.FuelType = vehicle.FuelType;
+            if (updatedVehicle == null)
+            {
+                return Ok("No modifications applied. The vehicle details are already up-to-date.");
+            }
 
-            await _vehicleService.EditVehicle(existingVehicle);
             return Ok("Vehicle Details Edited Successfully");
         }
 

@@ -10,7 +10,7 @@
 <h3>Are you sure you want to delete this?</h3>
 <div>
     <hr />
-    <dl class="row">
+    <dl class="row"  action="DeleteVehicle">
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.VehicleId)
         </dt>
@@ -67,8 +67,9 @@
         </dd>
     </dl>
     
-    <form asp-action="View">
+    <form asp-action="DeleteVehicle" asp-controller="Vehicle" method="post">
+        <input type="hidden" name="vehicleId" value="@Model.VehicleId" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="GetVehiclesDetails">Back To vehicle Details </a>
+        <a asp-action="GetVehiclesDetails" class="btn btn-secondary">Back To vehicle Details </a>
     </form>
 </div>

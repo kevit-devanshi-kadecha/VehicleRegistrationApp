@@ -12,11 +12,8 @@
     <div class="col-md-4">
         <form asp-controller="Vehicle" asp-action="AddVehicleDetails" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="VehicleId" class="control-label"></label>
-                <input asp-for="VehicleId" class="form-control" />
-                <span asp-validation-for="VehicleId" class="text-danger"></span>
-            </div>
+            <input type="hidden" asp-for="VehicleId" />
+
             <div class="form-group">
                 <label asp-for="VehicleNumber" class="control-label"></label>
                 <input asp-for="VehicleNumber" class="form-control" />

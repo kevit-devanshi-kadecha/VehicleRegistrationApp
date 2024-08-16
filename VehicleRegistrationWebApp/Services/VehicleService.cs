@@ -78,17 +78,19 @@ namespace VehicleRegistrationWebApp.Services
             }
         }
 
-        public async Task<VehicleViewModel> GetVehicleById(Guid vehicleId, string jwtToken)
+        public async Task<VehicleViewModel> GetVehicleByIdAsync(Guid vehicleId, string jwtToken)
         {
             using (HttpClient httpClient = _httpClientFactory.CreateClient())
             {
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
-                var requestUri = $"{_configuration["ApiBaseAddress"]}api/Vehicle/get/{vehicleId}";
-                
-                HttpResponseMessage httpResponseMessage = await httpClient.GetAsync(requestUri);
-                string response = await httpResponseMessage.Content.ReadAsStringAsync();
-                var vehicle = JsonConvert.DeserializeObject<VehicleViewModel>(response);
-                return vehicle!;
+                var requestUri = new Uri($"{_configuration["ApiBaseAddress"]}api/Vehicle/get/{vehicleId}");
+                var response = await httpClient.GetAsync(requestUri);
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<VehicleViewModel>(responseContent);
+                }
+                return null;
             }
         }
     }

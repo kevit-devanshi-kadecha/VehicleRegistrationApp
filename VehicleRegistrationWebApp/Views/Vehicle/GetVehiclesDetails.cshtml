@@ -35,8 +35,9 @@
                     <td>@vehicle.VehicleClass</td>
                     <td>@vehicle.FuelType</td>
                     <td>
-                        <a asp-controller="Vehicle" asp-action="EditVehicle" asp-route-id="@vehicle.VehicleId" class="btn btn-warning btn-sm">Edit</a>
-                        <a asp-controller="Vehicle" asp-action="DeleteVehicle" asp-route-id="@vehicle.VehicleId" class="btn btn-warning btn-sm">Delete</a>
+                        <a asp-controller="Vehicle" asp-action="EditVehicleDetails" asp-route-vehicleId="@vehicle.VehicleId" class="btn btn-primary">Edit</a>
+                        <a asp-controller="Vehicle" asp-action="DeleteVehicle" asp-route-vehicleId="@vehicle.VehicleId" class="btn btn-primary">Delete</a>
+                        <a asp-controller="Vehicle" asp-action="GetVehicleById" asp-route-vehicleId="@vehicle.VehicleId" class="btn btn-primary">Details</a>
                     </td>
                 </tr>
             }
@@ -52,7 +53,5 @@
 
 <div>
     <h3>Add New Vehicle</h3>
-    <button>
-        <a asp-area="" asp-controller="Vehicle" asp-action="AddVehicleDetails">Add Vehicle</a>
-    </button>
+    <a asp-controller="Vehicle" asp-action="AddVehicleDetails" class="btn btn-primary">Add Vehicle</a>
 </div>
