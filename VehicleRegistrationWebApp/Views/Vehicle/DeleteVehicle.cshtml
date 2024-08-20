@@ -67,7 +67,7 @@
         </dd>
     </dl>
     
-    <form asp-action="DeleteVehicle" asp-controller="Vehicle" method="post">
+    <form asp-action="PostDeleteVehicle" asp-controller="Vehicle" method="post">
         <input type="hidden" name="vehicleId" value="@Model.VehicleId" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
         <a asp-action="GetVehiclesDetails" class="btn btn-secondary">Back To vehicle Details </a>

@@ -102,8 +102,8 @@ namespace VehicleRegistrationWebApp.Controllers
             }
         }
 
-        [HttpGet("deleteVehicle/{vehicleId}")]
-        public async Task<IActionResult> DeleteVehicle([FromRoute] Guid vehicleId)
+        [HttpGet("deleteVehicle")]
+        public async Task<IActionResult> DeleteVehicle([FromQuery] Guid vehicleId)
         {
             string jwtToken = HttpContext.Session.GetString("Token");
             if (string.IsNullOrEmpty(jwtToken))
@@ -120,8 +120,8 @@ namespace VehicleRegistrationWebApp.Controllers
             return View("DeleteVehicle",vehicle);
         }
 
-        [HttpDelete("deleteVehicle")]
-        public async Task<IActionResult> PostDeleteVehicle([FromRoute] Guid vehicleId)
+        [HttpPost]
+        public async Task<IActionResult> PostDeleteVehicle([FromForm] Guid vehicleId)
         {
             string jwtToken = HttpContext.Session.GetString("Token");
             if (string.IsNullOrEmpty(jwtToken))

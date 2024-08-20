@@ -1,0 +1,11 @@
+﻿@{
+    ViewData["Title"] = "Logout";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Are you sure you want to log out?</h2>
+
+<form asp-controller="Home" asp-action="Logout" method="post">
+    <input type="submit" value="Logout" class="btn btn-danger" />
+    <a asp-controller="Vehicle" asp-action="GetVehiclesDetails" class="btn btn-secondary">Cancel</a>
+</form>

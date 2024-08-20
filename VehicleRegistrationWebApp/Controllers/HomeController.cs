@@ -52,6 +52,7 @@ namespace VehicleRegistrationWebApp.Controllers
             {
                 if (result.Message.Contains("Logged In Successfully"))
                 {
+                    ViewBag.Message = result.Message;
                     HttpContext.Session.SetString("Token", result.JwtToken);
                     return RedirectToAction("GetVehiclesDetails", "Vehicle");
                 }
@@ -64,6 +65,17 @@ namespace VehicleRegistrationWebApp.Controllers
 
             ModelState.AddModelError(string.Empty, "Unexpected error during login.");
             return View(model);
+        }
+
+        public IActionResult Logout()
+        {
+            if (HttpContext.Request.Method == "POST")
+            {
+                HttpContext.Session.Clear();
+                return RedirectToAction("Login", "Home");
+            }
+
+            return View();
         }
 
         public IActionResult Privacy()
