@@ -12,6 +12,7 @@ namespace VehicleRegistrationWebApp.Controllers
         private readonly AccountService _accountService;
         private readonly ILogger<HomeController> _logger;
         private readonly IHttpClientFactory _httpClientFactory;
+
         public HomeController(AccountService accountService, ILogger<HomeController> logger, IHttpClientFactory httpClientFactory)
         {
             _accountService = accountService;

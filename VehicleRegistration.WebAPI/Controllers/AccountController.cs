@@ -8,6 +8,9 @@ using VehicleRegistration.WebAPI.Models;
 
 namespace VehicleRegistration.WebAPI.Controllers
 {
+    /// <summary>
+    /// Account Controller 
+    /// </summary>
     [AllowAnonymous]
     [ApiController]
     public class AccountController : ControllerBase
@@ -15,12 +18,22 @@ namespace VehicleRegistration.WebAPI.Controllers
         private readonly IUserService _userService;
         private readonly IJwtService _jwttokenService;
 
+        /// <summary>
+        /// Controller for User SignUp and Login methods
+        /// </summary>
+        /// <param name="userService"></param>
+        /// <param name="jwtService"></param>
         public AccountController(IUserService userService, IJwtService jwtService)
         {
             _userService = userService;
             _jwttokenService = jwtService;
         }
         
+        /// <summary>
+        /// Method for Registering new User
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         [HttpPost("signup")]
         public async Task<IActionResult> SignUp([FromBody] User user)
         {
@@ -48,6 +61,11 @@ namespace VehicleRegistration.WebAPI.Controllers
             return Ok("Successfully Signed In \nWelcome to Vehicle Registration App");
         }
 
+        /// <summary>
+        /// Method for User LogIn 
+        /// </summary>
+        /// <param name="login"></param>
+        /// <returns></returns>
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] Login login)
         {

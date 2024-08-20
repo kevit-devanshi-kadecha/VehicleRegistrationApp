@@ -88,9 +88,9 @@ namespace VehicleRegistrationWebApp.Services
                 if (response.IsSuccessStatusCode)
                 {
                     var responseContent = await response.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<VehicleViewModel>(responseContent);
+                    return JsonConvert.DeserializeObject<VehicleViewModel>(responseContent)!;
                 }
-                return null;
+                return null!;
             }
         }
     }

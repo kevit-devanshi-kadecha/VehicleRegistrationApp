@@ -16,13 +16,13 @@ namespace VehicleRegistration.Core.Services
         }
         public async Task<List<VehicleModel>> GetVehicleDetails(string userId)
         {
-            List<VehicleModel> vehicleDetails = _context.VehiclesDetails.Where( v => v.UserId == int.Parse(userId)).ToList()!;
+            List<VehicleModel> vehicleDetails =_context.VehiclesDetails.Where( v => v.UserId == int.Parse(userId)).ToList()!;
             return vehicleDetails;
         }
 
         public Task<VehicleModel> GetVehicleByIdAsync(Guid vehicleId)
         {
-            return _context.VehiclesDetails.FindAsync(vehicleId).AsTask();
+            return _context.VehiclesDetails.FindAsync(vehicleId).AsTask()!;
         }
 
         public async Task<VehicleModel> AddVehicle(VehicleModel newVehicle)

@@ -46,7 +46,7 @@ namespace VehicleRegistrationWebApp.Services
                 }
 
                 string response = await httpResponseMessage.Content.ReadAsStringAsync();
-                TokenResponse loginResponse = JsonConvert.DeserializeObject<TokenResponse>(response);
+                TokenResponse loginResponse = JsonConvert.DeserializeObject<TokenResponse>(response)!;
                 httpContext.Session.SetString("Token", loginResponse.JwtToken);
                 return loginResponse;
             }

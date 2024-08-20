@@ -18,7 +18,7 @@ namespace VehicleRegistrationWebApp.Controllers
         [HttpGet("getVehicles")]
         public async Task<IActionResult> GetVehiclesDetails()
         {
-            string jwtToken = HttpContext.Session.GetString("Token");
+            string jwtToken = HttpContext.Session.GetString("Token")!;
             if (string.IsNullOrEmpty(jwtToken) ) 
             {
                return RedirectToAction("Login", "Home");
@@ -31,7 +31,7 @@ namespace VehicleRegistrationWebApp.Controllers
         [HttpGet]
         public IActionResult Addvehicledetails()
         {
-            string jwtToken = HttpContext.Session.GetString("Token");
+            string jwtToken = HttpContext.Session.GetString("Token")!;
             if (string.IsNullOrEmpty(jwtToken))
             {
                 return RedirectToAction("Login", "Home");
@@ -42,7 +42,7 @@ namespace VehicleRegistrationWebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> AddVehicleDetails(VehicleViewModel model)
         {
-            string jwtToken = HttpContext.Session.GetString("Token");
+            string jwtToken = HttpContext.Session.GetString("Token")!;
             if (string.IsNullOrEmpty(jwtToken))
             {
                 return RedirectToAction("Login", "Home");
@@ -55,7 +55,7 @@ namespace VehicleRegistrationWebApp.Controllers
         [HttpGet("editVehicle/{vehicleId}")]
         public async Task<IActionResult> EditVehicleDetails([FromRoute] Guid vehicleId)
         {
-            string jwtToken = HttpContext.Session.GetString("Token");
+            string jwtToken = HttpContext.Session.GetString("Token")!;
             if (string.IsNullOrEmpty(jwtToken))
             {
                 return RedirectToAction("Login", "Home");
@@ -70,11 +70,10 @@ namespace VehicleRegistrationWebApp.Controllers
             return View(vehicle);
         }
 
-        [HttpPost("editVehicle/{vehicleId}")]
+        [HttpPost("editVehicle")]
         public async Task<IActionResult> EditVehicleDetails([FromForm] VehicleViewModel model)
         {
-            
-            string jwtToken = HttpContext.Session.GetString("Token");
+            string jwtToken = HttpContext.Session.GetString("Token")!;
             if (string.IsNullOrEmpty(jwtToken))
             {
                 return RedirectToAction("Login", "Home");
@@ -105,7 +104,7 @@ namespace VehicleRegistrationWebApp.Controllers
         [HttpGet("deleteVehicle")]
         public async Task<IActionResult> DeleteVehicle([FromQuery] Guid vehicleId)
         {
-            string jwtToken = HttpContext.Session.GetString("Token");
+            string jwtToken = HttpContext.Session.GetString("Token")!;
             if (string.IsNullOrEmpty(jwtToken))
             {
                 return RedirectToAction("Login", "Home");
@@ -123,7 +122,7 @@ namespace VehicleRegistrationWebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> PostDeleteVehicle([FromForm] Guid vehicleId)
         {
-            string jwtToken = HttpContext.Session.GetString("Token");
+            string jwtToken = HttpContext.Session.GetString("Token")!;
             if (string.IsNullOrEmpty(jwtToken))
             {
                 return RedirectToAction("Login", "Home");
@@ -142,7 +141,7 @@ namespace VehicleRegistrationWebApp.Controllers
         [HttpGet("getVehiclebyId")]
         public async Task<IActionResult> GetVehicleById([FromQuery] VehicleRequest request)
         {
-            string jwtToken = HttpContext.Session.GetString("Token");
+            string jwtToken = HttpContext.Session.GetString("Token")!;
             if (string.IsNullOrEmpty(jwtToken))
             {
                 return RedirectToAction("Login", "Home");

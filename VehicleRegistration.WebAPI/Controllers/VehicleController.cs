@@ -12,16 +12,27 @@ namespace VehicleRegistration.WebAPI.Controllers
     [Authorize] 
     [Route("api/Vehicle")]
     [ApiController]
+
     public class VehicleController : ControllerBase
     {
         private readonly IVehicleService _vehicleService;
         private readonly ApplicationDbContext _context;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="vehicleService"></param>
+        /// <param name="context"></param>
         public VehicleController(IVehicleService vehicleService, ApplicationDbContext context)
         {
             _vehicleService = vehicleService; 
             _context = context; 
         }
 
+        /// <summary>
+        /// Method For Vehicles Details
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("getAllVehicles")]
         public async Task<IActionResult> GetAllVehicles()
         {
@@ -30,6 +41,11 @@ namespace VehicleRegistration.WebAPI.Controllers
             return Ok(vehicles);
         }
 
+        /// <summary>
+        /// Method For adding new vehicle
+        /// </summary>
+        /// <param name="vehicle"></param>
+        /// <returns></returns>
         [HttpPost("add")]
         public async Task<IActionResult> AddNewVehicle([FromBody] Vehicle vehicle)
         {
@@ -55,6 +71,11 @@ namespace VehicleRegistration.WebAPI.Controllers
             return Ok("Vehicle Added Successfully");
         }
 
+        /// <summary>
+        /// Method for editing Vehicle Details
+        /// </summary>
+        /// <param name="vehicle"></param>
+        /// <returns></returns>
         [HttpPut("edit")]
         public async Task<IActionResult> EditVehicle([FromBody] Vehicle vehicle)
         {
@@ -90,6 +111,11 @@ namespace VehicleRegistration.WebAPI.Controllers
             return Ok("Vehicle Details Edited Successfully");
         }
 
+        /// <summary>
+        /// Method for deleting Vehicle
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteVehicle(Guid id)
         {
@@ -101,6 +127,11 @@ namespace VehicleRegistration.WebAPI.Controllers
             return Ok("Vehicle Deleted successfully"); 
         }
 
+        /// <summary>
+        /// Method for get vehicle by Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("get/{id}")]
         public async Task<IActionResult> GetVehicleById(Guid id)
         {
