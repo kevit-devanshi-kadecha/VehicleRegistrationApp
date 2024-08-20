@@ -133,7 +133,6 @@ namespace VehicleRegistrationWebApp.Controllers
             return RedirectToAction("GetVehiclesDetails", "Vehicle");
         }
 
-
         [HttpGet]
         public IActionResult GetVehicleById()
         {
