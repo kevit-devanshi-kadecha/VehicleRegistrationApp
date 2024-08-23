@@ -6,6 +6,7 @@ using VehicleRegistration.WebAPI.Models;
 using System.Net.Http.Headers;
 using System.Security.Claims;
 using VehicleRegistration.Infrastructure;
+using Microsoft.Data.SqlClient;
 
 namespace VehicleRegistration.WebAPI.Controllers
 {
@@ -34,9 +35,11 @@ namespace VehicleRegistration.WebAPI.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("getAllVehicles")]
+        [ProducesResponseType(401)]
         public async Task<IActionResult> GetAllVehicles()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
             var vehicles = await _vehicleService.GetVehicleDetails(userId);
             return Ok(vehicles);
         }
@@ -47,6 +50,8 @@ namespace VehicleRegistration.WebAPI.Controllers
         /// <param name="vehicle"></param>
         /// <returns></returns>
         [HttpPost("add")]
+        [ProducesResponseType(201)] // Created 
+        [ProducesResponseType(403)]
         public async Task<IActionResult> AddNewVehicle([FromBody] Vehicle vehicle)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -66,8 +71,14 @@ namespace VehicleRegistration.WebAPI.Controllers
                 FuelType = vehicle.FuelType,
                 UserId = int.Parse(userId!)
             };
-
-            await _vehicleService.AddVehicle(newVehicle);
+            try
+            {
+                await _vehicleService.AddVehicle(newVehicle);
+            }
+            catch (SqlException ex)
+            {
+                throw new Exception("Error while saving vehicle to the database.", ex);
+            }
             return Ok("Vehicle Added Successfully");
         }
 
@@ -77,6 +88,8 @@ namespace VehicleRegistration.WebAPI.Controllers
         /// <param name="vehicle"></param>
         /// <returns></returns>
         [HttpPut("edit")]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(401)]
         public async Task<IActionResult> EditVehicle([FromBody] Vehicle vehicle)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -117,6 +130,7 @@ namespace VehicleRegistration.WebAPI.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete("delete/{id}")]
+        [ProducesResponseType(401)]
         public async Task<IActionResult> DeleteVehicle(Guid id)
         {
             var existingVehicle = await _vehicleService.GetVehicleByIdAsync(id);
@@ -133,6 +147,7 @@ namespace VehicleRegistration.WebAPI.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("get/{id}")]
+        [ProducesResponseType(401)]
         public async Task<IActionResult> GetVehicleById(Guid id)
         {
             var vehicle = await _vehicleService.GetVehicleByIdAsync(id);

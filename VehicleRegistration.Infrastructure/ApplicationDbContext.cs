@@ -5,8 +5,8 @@ namespace VehicleRegistration.Infrastructure
 {
     public class ApplicationDbContext : DbContext
     {
-        public DbSet<UserModel> Users { get; set; }
-        public DbSet<VehicleModel> VehiclesDetails { get; set; }
+        public virtual DbSet<UserModel> Users { get; set; }
+        public virtual DbSet<VehicleModel> VehiclesDetails { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }

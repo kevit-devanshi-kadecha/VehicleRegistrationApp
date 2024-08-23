@@ -35,6 +35,9 @@ namespace VehicleRegistration.WebAPI.Controllers
         /// <param name="user"></param>
         /// <returns></returns>
         [HttpPost("signup")]
+        [ProducesResponseType(201)] // Created 
+        [ProducesResponseType(400)]
+        [ProducesResponseType(409)] // Conflict
         public async Task<IActionResult> SignUp([FromBody] User user)
         {
             if (!ModelState.IsValid)
@@ -43,8 +46,10 @@ namespace VehicleRegistration.WebAPI.Controllers
             //Check if the username already exists
             var existingUser = await _userService.GetUserByNameAsync(user.UserName);
             if (existingUser != null)
+            {
                 return Conflict(new { Message = "Username already exists" });
-
+            }
+            
             // Check if the UserEmail already exists 
             var existingUser1 = await _userService.GetUserBYEmaiIdAsync(user.Email);
             if (existingUser1 != null)
@@ -67,6 +72,7 @@ namespace VehicleRegistration.WebAPI.Controllers
         /// <param name="login"></param>
         /// <returns></returns>
         [HttpPost("login")]
+        [ProducesResponseType(401)]
         public async Task<IActionResult> Login([FromBody] Login login)
         {
             if (!ModelState.IsValid)

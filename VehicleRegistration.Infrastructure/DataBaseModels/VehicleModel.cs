@@ -30,5 +30,4 @@ namespace VehicleRegistration.Infrastructure.DataBaseModels
         public UserModel User { get; set; }
         public int UserId { get; set; }
     }
-
 }

@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VehicleRegistration.Infrast
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VehicleRegistrationWebApp", "VehicleRegistrationWebApp\VehicleRegistrationWebApp.csproj", "{9C0A9B04-7523-4513-8664-7C1CC35C689C}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VehicleRegistrationAppTest", "VehicleRegistrationAppTest\VehicleRegistrationAppTest.csproj", "{4A977FD2-AB7F-40FA-8E05-12BA214375ED}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{9C0A9B04-7523-4513-8664-7C1CC35C689C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9C0A9B04-7523-4513-8664-7C1CC35C689C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9C0A9B04-7523-4513-8664-7C1CC35C689C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A977FD2-AB7F-40FA-8E05-12BA214375ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A977FD2-AB7F-40FA-8E05-12BA214375ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A977FD2-AB7F-40FA-8E05-12BA214375ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A977FD2-AB7F-40FA-8E05-12BA214375ED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

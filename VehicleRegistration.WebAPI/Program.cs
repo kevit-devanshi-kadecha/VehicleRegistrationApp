@@ -4,14 +4,14 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using VehicleRegistration.Core.Interfaces;
-//using VehicleRegistration.Core.Middleware;
 using VehicleRegistration.Core.Services;
 using VehicleRegistration.Infrastructure;
+using VehicleRegistration.WebAPI.Middleware;
 
 namespace VehicleRegistration.WebAPI
 {
     /// <summary>
-    /// 
+    /// WebApi program file 
     /// </summary>
     public class Program
     {
@@ -88,6 +88,15 @@ namespace VehicleRegistration.WebAPI
 
             // Service for Jwt Token 
             builder.Services.AddSingleton<IJwtService, JwtService>();
+
+            // Enabling Cors 
+            builder.Services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(policybuilder =>
+                {
+                    policybuilder.WithOrigins(builder.Configuration.GetSection("AllowedOrigins").Get<string>());
+                });
+            });
             
             var app = builder.Build();
 
@@ -95,11 +104,12 @@ namespace VehicleRegistration.WebAPI
 
             app.UseSwagger();
             app.UseSwaggerUI();
+            app.UseRouting();
+            app.UseCors();
             app.UseAuthentication();
             app.UseAuthorization();
-
-            app.MapControllers();
             
+            app.MapControllers();
 
             app.Run();
         }

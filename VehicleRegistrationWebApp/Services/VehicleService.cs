@@ -22,19 +22,30 @@ namespace VehicleRegistrationWebApp.Services
 
         public async Task<List<VehicleViewModel>> GetVehicles(string jwtToken)
         {
-            using (HttpClient httpClient = _httpClientFactory.CreateClient())
+            if (string.IsNullOrEmpty(jwtToken))
             {
-                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
-                HttpRequestMessage httpRequestMessage = new HttpRequestMessage()
+                throw new ArgumentNullException(nameof(jwtToken), "JWT token cannot be null or empty.");
+            }
+            try
+            {
+                using (HttpClient httpClient = _httpClientFactory.CreateClient())
                 {
-                    RequestUri = new Uri(_configuration["ApiBaseAddress"]+"api/Vehicle/getAllVehicles"),
-                    Method = HttpMethod.Get
-                };
-                HttpResponseMessage httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
-                string response = await httpResponseMessage.Content.ReadAsStringAsync();
+                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
+                    HttpRequestMessage httpRequestMessage = new HttpRequestMessage()
+                    {
+                        RequestUri = new Uri(_configuration["ApiBaseAddress"] + "api/Vehicle/getAllVehicles"),
+                        Method = HttpMethod.Get
+                    };
+                    HttpResponseMessage httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
+                    string response = await httpResponseMessage.Content.ReadAsStringAsync();
 
-                var vehiclesResponse = JsonConvert.DeserializeObject<List<VehicleViewModel>>(response);
-                return vehiclesResponse!;
+                    var vehiclesResponse = JsonConvert.DeserializeObject<List<VehicleViewModel>>(response);
+                    return vehiclesResponse!;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An unexpected error occurred while getting vehicles", ex);
             }
         }
 

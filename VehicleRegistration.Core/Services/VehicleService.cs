@@ -16,7 +16,12 @@ namespace VehicleRegistration.Core.Services
         }
         public async Task<List<VehicleModel>> GetVehicleDetails(string userId)
         {
-            List<VehicleModel> vehicleDetails =_context.VehiclesDetails.Where( v => v.UserId == int.Parse(userId)).ToList()!;
+            if (userId == null)
+            {
+                throw new ArgumentNullException(nameof(userId), "UserId cannot be null.");
+            }
+
+            List<VehicleModel> vehicleDetails = _context.VehiclesDetails.Where(v => v.UserId == int.Parse(userId)).ToList()!;
             return vehicleDetails;
         }
 
@@ -35,8 +40,10 @@ namespace VehicleRegistration.Core.Services
         public async Task<VehicleModel> EditVehicle(VehicleModel vehicle, string userId)
         {
             var existingVehicle = await _context.VehiclesDetails.FindAsync(vehicle.VehicleId);
-            if (existingVehicle == null) return null;
-
+            if (existingVehicle == null)
+            {
+                throw new NullReferenceException("Vehicle not found.");
+            }
             var hasChanges = typeof(VehicleModel).GetProperties()
                 .Any(prop => prop.GetValue(existingVehicle)?.ToString() != prop.GetValue(vehicle)?.ToString());
 
@@ -61,7 +68,7 @@ namespace VehicleRegistration.Core.Services
         public async Task<VehicleModel> DeleteVehicle(Guid vehicleId)
         {
             var vehicle = await _context.VehiclesDetails.FindAsync(vehicleId);
-            if (vehicle == null) 
+            if (vehicle == null)
                 return null;
 
             _context.VehiclesDetails.Remove(vehicle);
