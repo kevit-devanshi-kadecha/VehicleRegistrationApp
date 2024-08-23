@@ -10,7 +10,6 @@ namespace VehicleRegistration.Core.Services
     public class UserService : IUserService
     {
         private const int SaltSize = 16; 
-
         private readonly ApplicationDbContext _context;
 
         public UserService(ApplicationDbContext context)

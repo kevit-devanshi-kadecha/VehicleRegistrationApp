@@ -6,7 +6,6 @@ using System.Reflection;
 using VehicleRegistration.Core.Interfaces;
 using VehicleRegistration.Core.Services;
 using VehicleRegistration.Infrastructure;
-using VehicleRegistration.WebAPI.Middleware;
 
 namespace VehicleRegistration.WebAPI
 {
@@ -94,7 +93,8 @@ namespace VehicleRegistration.WebAPI
             {
                 options.AddDefaultPolicy(policybuilder =>
                 {
-                    policybuilder.WithOrigins(builder.Configuration.GetSection("AllowedOrigins").Get<string>());
+                    policybuilder.WithOrigins(builder.Configuration.GetSection("AllowedOrigins").Get<string>())
+                    .WithMethods("GET","POST","PUT","DELETE","PATCH");
                 });
             });
             
