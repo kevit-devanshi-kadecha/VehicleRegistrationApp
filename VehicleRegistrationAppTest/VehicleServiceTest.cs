@@ -16,6 +16,7 @@ namespace VehicleRegistrationAppTest
         private readonly Mock<ApplicationDbContext> _dbContext;
         private readonly Mock<IUserService> _userService;
         private readonly Mock<IVehicleService> _vehicleService;
+        private readonly VehicleService _vehicleServiceMock;
         private readonly IFixture _fixture;
         public VehicleServiceTest()
         {
@@ -40,12 +41,14 @@ namespace VehicleRegistrationAppTest
             // fixture object for Creating vehicle data 
             var vehicle = _fixture.Create<VehicleModel>();
             _vehicleService.Setup(v => v.GetVehicleByIdAsync(It.IsAny<Guid>())).ReturnsAsync(vehicle);
-            
+
+            // has vehicleService depends on userService and applicationDbContext inject dependencies mock object
+            _vehicleServiceMock = new VehicleService(dbContextMock.Object, _userService.Object);
         }
 
         #region Add Vehicle
 
-        // when the vehicle add request is null it returns Argument Null Exception 
+        // Test for Adding a Vehicle with Null Data
         [Fact]
         public async Task AddVehicle_WithNullData()
         {
@@ -56,7 +59,7 @@ namespace VehicleRegistrationAppTest
             await Assert.ThrowsAsync<ArgumentNullException>(() => _vehicleService.Object.AddVehicle(vehicle));
         }
 
-        //when vehicle add request is with proper details it add vehicle and returns success 
+        // Test for Adding a Vehicle with Valid Data 
         [Fact]
         public async Task AddVehicle_WithProperData()
         {
@@ -72,6 +75,7 @@ namespace VehicleRegistrationAppTest
             Assert.Equal(vehicle.VehicleId, result.VehicleId);
         }
         #endregion
+
 
     }
 }
