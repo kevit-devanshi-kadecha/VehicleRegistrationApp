@@ -39,30 +39,47 @@ namespace VehicleRegistration.Core.Services
 
         public async Task<VehicleModel> EditVehicle(VehicleModel vehicle, string userId)
         {
-            var existingVehicle = await _context.VehiclesDetails.FindAsync(vehicle.VehicleId);
-            if (existingVehicle == null)
+            if (vehicle == null)
             {
-                throw new NullReferenceException("Vehicle not found.");
-            }
-            var hasChanges = typeof(VehicleModel).GetProperties()
-                .Any(prop => prop.GetValue(existingVehicle)?.ToString() != prop.GetValue(vehicle)?.ToString());
-
-            if (!hasChanges)
-            {
-                return null;
+                throw new ArgumentNullException(nameof(vehicle), "Vehicle cannot be null.");
             }
 
-            // Update the existing vehicle details with new values 
-            foreach (var prop in typeof(VehicleModel).GetProperties())
+            try
             {
-                var newValue = prop.GetValue(vehicle);
-                prop.SetValue(existingVehicle, newValue);
+                var existingVehicle = await _context.VehiclesDetails.FindAsync(vehicle.VehicleId);
+                if (existingVehicle == null)
+                {
+                    throw new NullReferenceException("Vehicle not found.");
+                }
+
+                var hasChanges = typeof(VehicleModel).GetProperties()
+                    .Any(prop => prop.GetValue(existingVehicle)?.ToString() != prop.GetValue(vehicle)?.ToString());
+
+                if (!hasChanges)
+                {
+                    return null;
+                }
+
+                // Update the existing vehicle details with new values 
+                foreach (var prop in typeof(VehicleModel).GetProperties())
+                {
+                    var newValue = prop.GetValue(vehicle);
+                    prop.SetValue(existingVehicle, newValue);
+                }
+
+                _context.VehiclesDetails.Update(existingVehicle);
+                await _context.SaveChangesAsync();
+
+                return existingVehicle;
             }
-
-            _context.VehiclesDetails.Update(existingVehicle);
-            await _context.SaveChangesAsync();
-
-            return existingVehicle;
+            catch (DbUpdateException ex)
+            {
+                throw new Exception("Database update error occurred: " + ex.Message, ex);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An unexpected error occurred while editing the vehicle: " + ex.Message, ex);
+            }
         }
 
         public async Task<VehicleModel> DeleteVehicle(Guid vehicleId)

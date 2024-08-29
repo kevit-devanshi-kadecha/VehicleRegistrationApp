@@ -19,10 +19,6 @@ namespace VehicleRegistrationWebApp.Controllers
         public async Task<IActionResult> GetVehiclesDetails()
         {
             string jwtToken = HttpContext.Session.GetString("Token")!;
-            if (string.IsNullOrEmpty(jwtToken) ) 
-            {
-               return RedirectToAction("Login", "Home");
-            }
 
             var vehicles = await _vehicleService.GetVehicles(jwtToken);
             return View(vehicles);

@@ -6,6 +6,7 @@ using System.Reflection;
 using VehicleRegistration.Core.Interfaces;
 using VehicleRegistration.Core.Services;
 using VehicleRegistration.Infrastructure;
+using VehicleRegistration.WebAPI.Middleware;
 
 namespace VehicleRegistration.WebAPI
 {
@@ -107,8 +108,8 @@ namespace VehicleRegistration.WebAPI
             app.UseRouting();
             app.UseCors();
             app.UseAuthentication();
+            app.UseMiddleware<CustomAuthorizationMiddleware>();
             app.UseAuthorization();
-            
             app.MapControllers();
 
             app.Run();

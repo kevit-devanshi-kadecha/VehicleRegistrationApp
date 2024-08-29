@@ -10,13 +10,11 @@ namespace VehicleRegistrationWebApp.Controllers
     public class HomeController : Controller
     {
         private readonly AccountService _accountService;
-        private readonly ILogger<HomeController> _logger;
         private readonly IHttpClientFactory _httpClientFactory;
 
-        public HomeController(AccountService accountService, ILogger<HomeController> logger, IHttpClientFactory httpClientFactory)
+        public HomeController(AccountService accountService, IHttpClientFactory httpClientFactory)
         {
             _accountService = accountService;
-            _logger = logger;
             _httpClientFactory = httpClientFactory;
         }
         [HttpGet]
@@ -48,7 +46,9 @@ namespace VehicleRegistrationWebApp.Controllers
             {
                 return View(model);
             }
+
             var result = await _accountService.LoginAsync(model, HttpContext);
+
             if (!string.IsNullOrEmpty(result.Message))
             {
                 if (result.Message.Contains("Logged In Successfully"))

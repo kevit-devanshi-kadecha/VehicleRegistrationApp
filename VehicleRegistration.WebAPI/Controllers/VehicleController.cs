@@ -35,7 +35,6 @@ namespace VehicleRegistration.WebAPI.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("getAllVehicles")]
-        [ProducesResponseType(401)]
         public async Task<IActionResult> GetAllVehicles()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -93,11 +92,7 @@ namespace VehicleRegistration.WebAPI.Controllers
         public async Task<IActionResult> EditVehicle([FromBody] Vehicle vehicle)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (userId == null)
-            {
-                return Unauthorized("User not authenticated.");
-            }
-
+            
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 

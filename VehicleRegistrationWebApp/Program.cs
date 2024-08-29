@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.JsonWebTokens;
 using System.Net.Http.Headers;
 using VehicleRegistrationWebApp.Services;
 
@@ -36,7 +37,8 @@ namespace VehicleRegistrationWebApp
             app.UseStaticFiles();
 
             app.UseRouting();
-         
+            app.UseAuthentication();
+            app.UseAuthorization();
             app.UseSession();
             app.MapControllerRoute(
                 name: "default",
