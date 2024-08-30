@@ -51,57 +51,85 @@ namespace VehicleRegistrationWebApp.Services
 
         public async Task<string> AddVehicles(VehicleViewModel vehicleModel, string jwtToken)
         {
-            var jsonStr = JsonConvert.SerializeObject(vehicleModel);
-            using (HttpClient httpClient = _httpClientFactory.CreateClient())
+            try
             {
-                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
-                var content = new StringContent(jsonStr, Encoding.UTF8, "application/json");
-                
-                HttpResponseMessage httpResponseMessage = await httpClient.PostAsync(_configuration["ApiBaseAddress"] + "api/Vehicle/add", content);
-                string response = await httpResponseMessage.Content.ReadAsStringAsync();
-                return response;
+                var jsonStr = JsonConvert.SerializeObject(vehicleModel);
+                using (HttpClient httpClient = _httpClientFactory.CreateClient())
+                {
+                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
+                    var content = new StringContent(jsonStr, Encoding.UTF8, "application/json");
+
+                    HttpResponseMessage httpResponseMessage = await httpClient.PostAsync(_configuration["ApiBaseAddress"] + "api/Vehicle/add", content);
+                    string response = await httpResponseMessage.Content.ReadAsStringAsync();
+                    return response;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error occured while adding vehicles to Database", ex);
             }
         }
       
         public async Task<string> UpdateVehicles(VehicleViewModel vehicleModel, string jwtToken)
         {
-            var jsonStr = JsonConvert.SerializeObject(vehicleModel);
-            using (HttpClient httpClient = _httpClientFactory.CreateClient())
+            try
             {
-                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
-                var content = new StringContent(jsonStr, Encoding.UTF8, "application/json");
-                HttpResponseMessage httpResponseMessage = await httpClient.PutAsync(_configuration["ApiBaseAddress"] + "api/Vehicle/edit", content);
-                string response = await httpResponseMessage.Content.ReadAsStringAsync();
-                return response;
+                var jsonStr = JsonConvert.SerializeObject(vehicleModel);
+                using (HttpClient httpClient = _httpClientFactory.CreateClient())
+                {
+                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
+                    var content = new StringContent(jsonStr, Encoding.UTF8, "application/json");
+                    HttpResponseMessage httpResponseMessage = await httpClient.PutAsync(_configuration["ApiBaseAddress"] + "api/Vehicle/edit", content);
+                    string response = await httpResponseMessage.Content.ReadAsStringAsync();
+                    return response;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error occured while editing vehicles to Database", ex);
             }
         }
 
         public async Task<string> DeleteVehicles(Guid vehicleId, string jwtToken)
         {
-            using (HttpClient httpClient = _httpClientFactory.CreateClient())
+            try
             {
-                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
-                var requestUri = $"{_configuration["ApiBaseAddress"]}api/Vehicle/delete/{vehicleId}";
+                using (HttpClient httpClient = _httpClientFactory.CreateClient())
+                {
+                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
+                    var requestUri = $"{_configuration["ApiBaseAddress"]}api/Vehicle/delete/{vehicleId}";
 
-                HttpResponseMessage httpResponseMessage = await httpClient.DeleteAsync(requestUri);
-                string response = await httpResponseMessage.Content.ReadAsStringAsync();
-                return response;
+                    HttpResponseMessage httpResponseMessage = await httpClient.DeleteAsync(requestUri);
+                    string response = await httpResponseMessage.Content.ReadAsStringAsync();
+                    return response;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error occured while deleting vehicle", ex);
             }
         }
 
         public async Task<VehicleViewModel> GetVehicleByIdAsync(Guid vehicleId, string jwtToken)
         {
-            using (HttpClient httpClient = _httpClientFactory.CreateClient())
+            try
             {
-                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
-                var requestUri = new Uri($"{_configuration["ApiBaseAddress"]}api/Vehicle/get/{vehicleId}");
-                var response = await httpClient.GetAsync(requestUri);
-                if (response.IsSuccessStatusCode)
+                using (HttpClient httpClient = _httpClientFactory.CreateClient())
                 {
-                    var responseContent = await response.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<VehicleViewModel>(responseContent)!;
+                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
+                    var requestUri = new Uri($"{_configuration["ApiBaseAddress"]}api/Vehicle/get/{vehicleId}");
+                    var response = await httpClient.GetAsync(requestUri);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var responseContent = await response.Content.ReadAsStringAsync();
+                        return JsonConvert.DeserializeObject<VehicleViewModel>(responseContent)!;
+                    }
+                    return null!;
                 }
-                return null!;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error occured while fetching vehicle by Id");
             }
         }
     }

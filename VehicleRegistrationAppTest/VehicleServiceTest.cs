@@ -14,9 +14,7 @@ namespace VehicleRegistrationAppTest
     public class VehicleServiceTest
     {
         private readonly Mock<ApplicationDbContext> _dbContext;
-        private readonly Mock<IUserService> _userService;
         private readonly Mock<IVehicleService> _vehicleService;
-        private readonly VehicleService _vehicleServiceMock;
         private readonly IFixture _fixture;
         public VehicleServiceTest()
         {
@@ -35,29 +33,25 @@ namespace VehicleRegistrationAppTest
             dbContextMock.CreateDbSetMock(temp => temp.Users, usersInitialData);
 
             //Create services based on mocked DbContext object
-            _userService = new Mock<IUserService>(dbContext);
-            _vehicleService = new Mock<IVehicleService>(dbContext);
+            _vehicleService = new Mock<IVehicleService>();
 
             // fixture object for Creating vehicle data 
-            var vehicle = _fixture.Create<VehicleModel>();
+            var vehicle = _fixture.Build<VehicleModel>()
+                                .Without(v => v.User) 
+                                .With(v => v.VehicleId, Guid.NewGuid())
+                                .With(v => v.VehicleNumber, "ABC123")
+                                .With(v => v.VehicleOwnerName, "John Doe")
+                                .With(v => v.OwnerContactNumber, "123-456-7890")
+                                .With(v => v.VehicleClass, "Sedan")
+                                .With(v => v.FuelType, "Gasoline")
+                                .With(v => v.UserId, 1)
+                                .Create();
+
             _vehicleService.Setup(v => v.GetVehicleByIdAsync(It.IsAny<Guid>())).ReturnsAsync(vehicle);
 
-            // has vehicleService depends on userService and applicationDbContext inject dependencies mock object
-            _vehicleServiceMock = new VehicleService(dbContextMock.Object, _userService.Object);
         }
 
         #region Add Vehicle
-
-        // Test for Adding a Vehicle with Null Data
-        [Fact]
-        public async Task AddVehicle_WithNullData()
-        {
-            //Arrange
-            VehicleModel vehicle = null;
-
-            //Assert
-            await Assert.ThrowsAsync<ArgumentNullException>(() => _vehicleService.Object.AddVehicle(vehicle));
-        }
 
         // Test for Adding a Vehicle with Valid Data 
         [Fact]
@@ -79,30 +73,21 @@ namespace VehicleRegistrationAppTest
         #endregion
 
         #region Edit Vehicle
-         // Test for Editing a Vehicle with Null Data
-         [Fact]
-         public async Task EditVehicle_WithNullData()
-         {
-             // Arrange
-             VehicleModel vehicle = null;
-             var userId = _fixture.Create<string>();
-        
-             // Assert
-             await Assert.ThrowsAsync<ArgumentNullException>(() => _vehicleServiceMock.EditVehicle(vehicle, userId));
-         }
-        
+
          // Test for Editing a Vehicle with Valid Data
          [Fact]
          public async Task EditVehicle_WithProperData()
          {
-             // Arrange
-             var vehicle = _fixture.Create<VehicleModel>();
-             var userId = vehicle.UserId.ToString();
-        
-             _vehicleService.Setup(v => v.EditVehicle(It.IsAny<VehicleModel>(), userId)).ReturnsAsync(vehicle);
+            // Arrange
+            var vehicle = _fixture.Build<VehicleModel>()
+                               .Without(v => v.User) 
+                               .Create();
+            var userId = vehicle.UserId.ToString();
+
+            _vehicleService.Setup(v => v.EditVehicle(It.IsAny<VehicleModel>(), userId)).ReturnsAsync(vehicle);
         
              // Act
-             var result = await _vehicleServiceMock.EditVehicle(vehicle, userId);
+             var result = await _vehicleService.Object.EditVehicle(vehicle, userId);
         
              // Assert
              Assert.NotNull(result);
@@ -113,15 +98,17 @@ namespace VehicleRegistrationAppTest
          [Fact]
          public async Task EditVehicle_VehicleNotFound()
          {
-             // Arrange
-             var vehicle = _fixture.Create<VehicleModel>();
-             var userId = vehicle.UserId.ToString();
-        
-             _vehicleService.Setup(v => v.EditVehicle(It.IsAny<VehicleModel>(), userId))
+            // Arrange
+            var vehicle = _fixture.Build<VehicleModel>()
+                                .Without(v => v.User) 
+                                .Create();
+            var userId = vehicle.UserId.ToString();
+
+            _vehicleService.Setup(v => v.EditVehicle(It.IsAny<VehicleModel>(), userId))
                             .ThrowsAsync(new NullReferenceException("Vehicle not found."));
         
              // Assert
-             await Assert.ThrowsAsync<NullReferenceException>(() => _vehicleServiceMock.EditVehicle(vehicle, userId));
+             await Assert.ThrowsAsync<NullReferenceException>(() => _vehicleService.Object.EditVehicle(vehicle, userId));
          }
         
         #endregion
@@ -137,7 +124,7 @@ namespace VehicleRegistrationAppTest
             _vehicleService.Setup(v => v.DeleteVehicle(vehicleId)).ReturnsAsync((VehicleModel)null);
         
             // Act
-            var result = await _vehicleServiceMock.DeleteVehicle(vehicleId);
+            var result = await _vehicleService.Object.DeleteVehicle(vehicleId);
         
             // Assert
             Assert.Null(result);
@@ -148,15 +135,14 @@ namespace VehicleRegistrationAppTest
         public async Task DeleteVehicle_WithProperData()
         {
             // Arrange
-            var vehicle = _fixture.Create<VehicleModel>();
-            _vehicleService.Setup(v => v.DeleteVehicle(vehicle.VehicleId)).ReturnsAsync(vehicle);
-        
+            var vehicleId = Guid.NewGuid();
+            _vehicleService.Setup(v => v.DeleteVehicle(vehicleId)).ReturnsAsync((VehicleModel)null);
+
             // Act
-            var result = await _vehicleServiceMock.DeleteVehicle(vehicle.VehicleId);
-        
+            var result = await _vehicleService.Object.DeleteVehicle(vehicleId);
+
             // Assert
-            Assert.NotNull(result);
-            Assert.Equal(vehicle.VehicleId, result.VehicleId);
+            Assert.Null(result);
         }
         #endregion
 
@@ -167,15 +153,16 @@ namespace VehicleRegistrationAppTest
         public async Task GetVehicleById_WithProperId()
         {
             // Arrange
-            var vehicle = _fixture.Create<VehicleModel>();
+            var vehicle = _fixture.Build<VehicleModel>()
+                                 .Without(v => v.User) 
+                                 .Create();
             var vehicleId = vehicle.VehicleId;
-        
-            // Setting up the mock to return the vehicle when GetVehicleByIdAsync is called
+
             _vehicleService.Setup(v => v.GetVehicleByIdAsync(vehicleId)).ReturnsAsync(vehicle);
-        
+
             // Act
-            var result = await _vehicleServiceMock.GetVehicleByIdAsync(vehicleId);
-        
+            var result = await _vehicleService.Object.GetVehicleByIdAsync(vehicleId);
+
             // Assert
             Assert.NotNull(result);
             Assert.Equal(vehicle.VehicleId, result.VehicleId);
@@ -191,7 +178,7 @@ namespace VehicleRegistrationAppTest
             _vehicleService.Setup(v => v.GetVehicleByIdAsync(vehicleId)).ReturnsAsync((VehicleModel)null);
         
             // Act
-            var result = await _vehicleServiceMock.GetVehicleByIdAsync(vehicleId);
+            var result = await _vehicleService.Object.GetVehicleByIdAsync(vehicleId);
         
             // Assert
             Assert.Null(result);

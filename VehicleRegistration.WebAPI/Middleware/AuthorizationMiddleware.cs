@@ -3,11 +3,11 @@ using System.Security.Claims;
 
 namespace VehicleRegistration.WebAPI.Middleware
 {
-    public class CustomAuthorizationMiddleware 
+    public class AuthorizationMiddleware 
     {
         private readonly RequestDelegate _next;
 
-        public CustomAuthorizationMiddleware(RequestDelegate requestDelegate)
+        public AuthorizationMiddleware(RequestDelegate requestDelegate)
         {
             _next = requestDelegate;
         }

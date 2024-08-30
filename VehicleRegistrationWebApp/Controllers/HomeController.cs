@@ -60,7 +60,7 @@ namespace VehicleRegistrationWebApp.Controllers
                 else
                 {
                     ModelState.AddModelError(string.Empty, result.Message);
-                    return View(model); 
+                    return View(model);
                 }
             }
 

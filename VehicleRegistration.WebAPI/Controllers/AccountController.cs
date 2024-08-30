@@ -35,9 +35,6 @@ namespace VehicleRegistration.WebAPI.Controllers
         /// <param name="user"></param>
         /// <returns></returns>
         [HttpPost("signup")]
-        [ProducesResponseType(201)] // Created 
-        [ProducesResponseType(400)]
-        [ProducesResponseType(409)] // Conflict
         public async Task<IActionResult> SignUp([FromBody] User user)
         {
             if (!ModelState.IsValid)
@@ -72,13 +69,15 @@ namespace VehicleRegistration.WebAPI.Controllers
         /// <param name="login"></param>
         /// <returns></returns>
         [HttpPost("login")]
-        [ProducesResponseType(401)]
         public async Task<IActionResult> Login([FromBody] Login login)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             var isAuthenticated = await _userService.AuthenticateUser(login.UserName, login.Password);
+            if (!isAuthenticated)
+                return Unauthorized("Invalid credentials");
+
             var user = await _userService.GetUserByNameAsync(login.UserName);
             var tokenResponse = _jwttokenService.CreateJwtToken(user);
 

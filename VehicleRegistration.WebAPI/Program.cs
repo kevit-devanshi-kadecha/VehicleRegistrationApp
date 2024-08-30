@@ -108,7 +108,8 @@ namespace VehicleRegistration.WebAPI
             app.UseRouting();
             app.UseCors();
             app.UseAuthentication();
-            app.UseMiddleware<CustomAuthorizationMiddleware>();
+            app.UseMiddleware<AuthorizationMiddleware>();
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
             app.UseAuthorization();
             app.MapControllers();
 

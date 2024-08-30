@@ -32,6 +32,10 @@ namespace VehicleRegistration.Core.Services
 
         public async Task<VehicleModel> AddVehicle(VehicleModel newVehicle)
         {
+            if (newVehicle == null)
+            {
+                throw new ArgumentNullException(nameof(newVehicle));
+            }
             _context.VehiclesDetails.Add(newVehicle);
             await _context.SaveChangesAsync();
             return newVehicle;
