@@ -142,13 +142,11 @@ namespace VehicleRegistrationWebApp.Controllers
             string jwtToken = HttpContext.Session.GetString("Token")!;
 
             var vehicle = await _vehicleService.GetVehicleByIdAsync(request.VehicleId, jwtToken);
-            _logger.LogInformation("Received vehicle using vehicle Id");
-
             if (vehicle == null)
              {
                  return NotFound();
              }
-            _logger.LogInformation($"Vehicle data with vehicle is : {vehicle}");
+            _logger.LogInformation($"Vehicle data with vehicle number: {vehicle.VehicleNumber}");
             return View(vehicle);
         }
     }
