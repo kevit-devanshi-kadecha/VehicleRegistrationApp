@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Text;
 using VehicleRegistration.Infrastructure.DataBaseModels;
 using VehicleRegistration.Core.Interfaces;
+using Microsoft.Extensions.Logging;
 
 
 namespace VehicleRegistration.Core.Services
@@ -12,9 +13,11 @@ namespace VehicleRegistration.Core.Services
     public class JwtService : IJwtService
     {
         private readonly IConfiguration _configuration;
-        public JwtService(IConfiguration configuration)
+        private readonly ILogger<JwtService> _logger;
+        public JwtService(IConfiguration configuration, ILogger<JwtService> logger)
         {
             _configuration = configuration;
+            _logger = logger;
         }
 
         public AuthenticationResponse CreateJwtToken(UserModel user)
@@ -38,7 +41,7 @@ namespace VehicleRegistration.Core.Services
                  signingCredentials: creds);
 
             string jwt = new JwtSecurityTokenHandler().WriteToken(token);
-
+            _logger.LogInformation("Jwt Token generated successfully");
             return new AuthenticationResponse()
             {
                 Token = jwt,

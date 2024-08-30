@@ -13,11 +13,12 @@ namespace VehicleRegistration.WebAPI.Middleware
             _logger = logger;
         }
 
-        public async Task InvokAsync(HttpContext context)
+        public async Task InvokeAsync(HttpContext context)
         {
             try
             {
                 await _next(context);
+                return;
             }
             catch (ArgumentNullException ex)
             {

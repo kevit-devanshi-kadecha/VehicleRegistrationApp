@@ -10,7 +10,6 @@ using Microsoft.Data.SqlClient;
 
 namespace VehicleRegistration.WebAPI.Controllers
 {
-    [Authorize] 
     [Route("api/Vehicle")]
     [ApiController]
 
@@ -18,16 +17,18 @@ namespace VehicleRegistration.WebAPI.Controllers
     {
         private readonly IVehicleService _vehicleService;
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<VehicleController> _logger;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="vehicleService"></param>
         /// <param name="context"></param>
-        public VehicleController(IVehicleService vehicleService, ApplicationDbContext context)
+        public VehicleController(IVehicleService vehicleService, ApplicationDbContext context, ILogger<VehicleController> logger)
         {
             _vehicleService = vehicleService; 
             _context = context; 
+            _logger = logger;
         }
 
         /// <summary>
@@ -38,7 +39,7 @@ namespace VehicleRegistration.WebAPI.Controllers
         public async Task<IActionResult> GetAllVehicles()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
+            _logger.LogInformation($"Get all vehicles associated with user: {userId}");
             var vehicles = await _vehicleService.GetVehicleDetails(userId);
             return Ok(vehicles);
         }
@@ -54,6 +55,7 @@ namespace VehicleRegistration.WebAPI.Controllers
         public async Task<IActionResult> AddNewVehicle([FromBody] Vehicle vehicle)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            _logger.LogInformation($"Add vehicle request for userId: {userId}");
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
@@ -70,9 +72,11 @@ namespace VehicleRegistration.WebAPI.Controllers
                 FuelType = vehicle.FuelType,
                 UserId = int.Parse(userId!)
             };
+
             try
             {
                 await _vehicleService.AddVehicle(newVehicle);
+                _logger.LogInformation($"Vehicle data added successfully with vehicle number: {vehicle.VehicleNumber}");
             }
             catch (SqlException ex)
             {
@@ -92,7 +96,8 @@ namespace VehicleRegistration.WebAPI.Controllers
         public async Task<IActionResult> EditVehicle([FromBody] Vehicle vehicle)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            
+            _logger.LogInformation($"Edit vehicle Details request by user with userId: {userId}");
+
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
@@ -128,6 +133,7 @@ namespace VehicleRegistration.WebAPI.Controllers
         [ProducesResponseType(401)]
         public async Task<IActionResult> DeleteVehicle(Guid id)
         {
+            _logger.LogInformation($"Delete vehicle with Vehicle Id:{id}");
             var existingVehicle = await _vehicleService.GetVehicleByIdAsync(id);
             if (existingVehicle == null)
                 return NotFound();
@@ -145,6 +151,7 @@ namespace VehicleRegistration.WebAPI.Controllers
         [ProducesResponseType(401)]
         public async Task<IActionResult> GetVehicleById(Guid id)
         {
+            _logger.LogInformation($"Getting vehicle by Id : {id}");
             var vehicle = await _vehicleService.GetVehicleByIdAsync(id);
             if (vehicle == null)
                 return NotFound();

@@ -13,15 +13,18 @@ namespace VehicleRegistrationWebApp.Services
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IConfiguration _configuration;
+        private readonly ILogger<VehicleService> _logger;
 
-        public VehicleService(IHttpClientFactory httpClientFactory, IConfiguration configuration)
+        public VehicleService(IHttpClientFactory httpClientFactory, IConfiguration configuration, ILogger<VehicleService> logger)
         {
             _httpClientFactory = httpClientFactory;
             _configuration = configuration;
+            _logger = logger;
         }
 
         public async Task<List<VehicleViewModel>> GetVehicles(string jwtToken)
         {
+            _logger.BeginScope("Getting Vehicles Details from Database");
             if (string.IsNullOrEmpty(jwtToken))
             {
                 throw new ArgumentNullException(nameof(jwtToken), "JWT token cannot be null or empty.");
@@ -38,6 +41,7 @@ namespace VehicleRegistrationWebApp.Services
                     };
                     HttpResponseMessage httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
                     string response = await httpResponseMessage.Content.ReadAsStringAsync();
+                    _logger.LogInformation("Received the api response");
 
                     var vehiclesResponse = JsonConvert.DeserializeObject<List<VehicleViewModel>>(response);
                     return vehiclesResponse!;
@@ -51,8 +55,10 @@ namespace VehicleRegistrationWebApp.Services
 
         public async Task<string> AddVehicles(VehicleViewModel vehicleModel, string jwtToken)
         {
+            _logger.BeginScope("Add Vehicle Request initated");
             try
             {
+                _logger.LogInformation($"VehicleData: {vehicleModel}");
                 var jsonStr = JsonConvert.SerializeObject(vehicleModel);
                 using (HttpClient httpClient = _httpClientFactory.CreateClient())
                 {
@@ -72,6 +78,7 @@ namespace VehicleRegistrationWebApp.Services
       
         public async Task<string> UpdateVehicles(VehicleViewModel vehicleModel, string jwtToken)
         {
+            _logger.BeginScope("Updating vehicle data");
             try
             {
                 var jsonStr = JsonConvert.SerializeObject(vehicleModel);
@@ -81,6 +88,10 @@ namespace VehicleRegistrationWebApp.Services
                     var content = new StringContent(jsonStr, Encoding.UTF8, "application/json");
                     HttpResponseMessage httpResponseMessage = await httpClient.PutAsync(_configuration["ApiBaseAddress"] + "api/Vehicle/edit", content);
                     string response = await httpResponseMessage.Content.ReadAsStringAsync();
+                    if(response.Equals(StatusCodes.Status200OK))
+                    {
+                        _logger.LogInformation("Vehicle data updated successfully");
+                    }
                     return response;
                 }
             }
@@ -92,15 +103,20 @@ namespace VehicleRegistrationWebApp.Services
 
         public async Task<string> DeleteVehicles(Guid vehicleId, string jwtToken)
         {
+            _logger.BeginScope("Deleting vehilce permanently");
             try
             {
                 using (HttpClient httpClient = _httpClientFactory.CreateClient())
                 {
                     httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
                     var requestUri = $"{_configuration["ApiBaseAddress"]}api/Vehicle/delete/{vehicleId}";
-
+                    _logger.LogInformation("receieved delete api response");
                     HttpResponseMessage httpResponseMessage = await httpClient.DeleteAsync(requestUri);
                     string response = await httpResponseMessage.Content.ReadAsStringAsync();
+                    if (response.Equals(StatusCodes.Status200OK))
+                    {
+                        _logger.LogInformation("Vehicle deleted successfully");
+                    }
                     return response;
                 }
             }
@@ -112,10 +128,12 @@ namespace VehicleRegistrationWebApp.Services
 
         public async Task<VehicleViewModel> GetVehicleByIdAsync(Guid vehicleId, string jwtToken)
         {
+            _logger.BeginScope("Getting vehicle by vehicle Id ");
             try
             {
                 using (HttpClient httpClient = _httpClientFactory.CreateClient())
                 {
+                    _logger.LogInformation($"Get request for vehicle with vehicle Id: {vehicleId}");
                     httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
                     var requestUri = new Uri($"{_configuration["ApiBaseAddress"]}api/Vehicle/get/{vehicleId}");
                     var response = await httpClient.GetAsync(requestUri);

@@ -11,11 +11,12 @@ namespace VehicleRegistrationWebApp.Controllers
     {
         private readonly AccountService _accountService;
         private readonly IHttpClientFactory _httpClientFactory;
-
-        public HomeController(AccountService accountService, IHttpClientFactory httpClientFactory)
+        private readonly ILogger<HomeController> _logger;
+        public HomeController(AccountService accountService, IHttpClientFactory httpClientFactory, ILogger<HomeController> logger)
         {
             _accountService = accountService;
             _httpClientFactory = httpClientFactory;
+            _logger = logger;
         }
         [HttpGet]
         public IActionResult SignUp()
@@ -26,22 +27,26 @@ namespace VehicleRegistrationWebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> SignUp(SignUpViewModel signUpmodel)
         {
+            _logger.LogInformation("{controllerName}.{methodName} method", nameof(HomeController), nameof(SignUp));
             if (!ModelState.IsValid)
             {
                 return View(signUpmodel);
             }
             await _accountService.SignUpAsync(signUpmodel);
+            _logger.LogInformation("SignUp done successfully");
             return RedirectToAction("Login");
         }
         [HttpGet]
         public IActionResult Login()
         {
+            _logger.LogInformation("Executing Login method of Home Controller");
             return View();
         }
 
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
+            _logger.LogInformation("{controllerName}.{methodName}", nameof(HomeController), nameof(Login));
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -70,6 +75,7 @@ namespace VehicleRegistrationWebApp.Controllers
 
         public IActionResult Logout()
         {
+            _logger.LogInformation("LogOut method of Home Controller executed");
             if (HttpContext.Request.Method == "POST")
             {
                 HttpContext.Session.Clear();

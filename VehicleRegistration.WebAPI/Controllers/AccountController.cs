@@ -17,16 +17,18 @@ namespace VehicleRegistration.WebAPI.Controllers
     {
         private readonly IUserService _userService;
         private readonly IJwtService _jwttokenService;
-
+        private readonly ILogger<AccountController> _logger;   
+        
         /// <summary>
         /// Controller for User SignUp and Login methods
         /// </summary>
         /// <param name="userService"></param>
         /// <param name="jwtService"></param>
-        public AccountController(IUserService userService, IJwtService jwtService)
+        public AccountController(IUserService userService, IJwtService jwtService, ILogger<AccountController> logger)
         {
             _userService = userService;
             _jwttokenService = jwtService;
+            _logger = logger;
         }
         
         /// <summary>
@@ -37,6 +39,7 @@ namespace VehicleRegistration.WebAPI.Controllers
         [HttpPost("signup")]
         public async Task<IActionResult> SignUp([FromBody] User user)
         {
+            _logger.LogInformation("API {controllerName}.{methodName} method", nameof(AccountController), nameof(SignUp));
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
@@ -71,6 +74,7 @@ namespace VehicleRegistration.WebAPI.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] Login login)
         {
+            _logger.LogInformation("API {controllerName}.{methodName} method", nameof(AccountController), nameof(Login));
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 

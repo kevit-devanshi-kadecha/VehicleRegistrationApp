@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.JsonWebTokens;
+using Serilog;
 using System.Net.Http.Headers;
 using VehicleRegistrationWebApp.Services;
 
@@ -10,6 +11,13 @@ namespace VehicleRegistrationWebApp
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            // Serilog
+            builder.Host.UseSerilog((HostBuilderContext context, IServiceProvider services, LoggerConfiguration loggerConfiguration) =>
+            {
+                loggerConfiguration.ReadFrom.Configuration(context.Configuration)
+                .ReadFrom.Services(services);
+            });
 
             // Add services to the container.
             builder.Services.AddHttpClient();
@@ -24,6 +32,7 @@ namespace VehicleRegistrationWebApp
                 options.Cookie.IsEssential = true;
             });
             builder.Services.AddControllersWithViews();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -34,6 +43,7 @@ namespace VehicleRegistrationWebApp
             }
 
             app.UseHttpsRedirection();
+            app.UseSerilogRequestLogging();
             app.UseStaticFiles();
 
             app.UseRouting();
