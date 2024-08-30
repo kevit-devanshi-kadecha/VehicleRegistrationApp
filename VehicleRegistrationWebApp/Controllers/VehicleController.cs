@@ -3,11 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using Serilog;
 using Serilog.Extensions.Hosting;
+using VehicleRegistrationWebApp.Filters;
 using VehicleRegistrationWebApp.Models;
 using VehicleRegistrationWebApp.Services;
 
 namespace VehicleRegistrationWebApp.Controllers
 {
+    [ServiceFilter(typeof(JwtTokenActionFilter))]
     public class VehicleController : Controller
     {
         private readonly VehicleService _vehicleService;
@@ -36,11 +38,6 @@ namespace VehicleRegistrationWebApp.Controllers
         public IActionResult Addvehicledetails()
         {
             _logger.LogInformation("{Controller}.{methodName} method", nameof(VehicleController), nameof(Addvehicledetails));
-            string jwtToken = HttpContext.Session.GetString("Token")!;
-            if (string.IsNullOrEmpty(jwtToken))
-            {
-                return RedirectToAction("Login", "Home");
-            }
             return View();
         }
 
@@ -50,12 +47,8 @@ namespace VehicleRegistrationWebApp.Controllers
             _logger.LogInformation("{Controller}.{methodName} method", nameof(VehicleController), nameof(AddVehicleDetails));
             
             string jwtToken = HttpContext.Session.GetString("Token")!;
-            if (string.IsNullOrEmpty(jwtToken))
-            {
-                return RedirectToAction("Login", "Home");
-            }
-
             var result = await _vehicleService.AddVehicles(model, jwtToken);
+
             _logger.LogInformation($"{nameof(VehicleController)}: {result}");
 
             return RedirectToAction("GetVehiclesDetails");
@@ -68,12 +61,8 @@ namespace VehicleRegistrationWebApp.Controllers
             _logger.LogInformation("{Controller}.{methodName} Get method", nameof(VehicleController), nameof(EditVehicleDetails));
             
             string jwtToken = HttpContext.Session.GetString("Token")!;
-            if (string.IsNullOrEmpty(jwtToken))
-            {
-                return RedirectToAction("Login", "Home");
-            }
-
             var vehicle = await _vehicleService.GetVehicleByIdAsync(vehicleId, jwtToken);
+
             _logger.LogInformation("Received vehicle using vehicle Id");
 
             if (vehicle == null)
@@ -89,10 +78,6 @@ namespace VehicleRegistrationWebApp.Controllers
         {
             _logger.LogInformation("{Controller}.{methodName} method", nameof(VehicleController), nameof(EditVehicleDetails));
             string jwtToken = HttpContext.Session.GetString("Token")!;
-            if (string.IsNullOrEmpty(jwtToken))
-            {
-                return RedirectToAction("Login", "Home");
-            }
 
             if (!ModelState.IsValid)
             {
@@ -123,11 +108,6 @@ namespace VehicleRegistrationWebApp.Controllers
         {
             _logger.LogInformation($"delete vehicle with vehicle Id: {vehicleId}");
             string jwtToken = HttpContext.Session.GetString("Token")!;
-            if (string.IsNullOrEmpty(jwtToken))
-            {
-                return RedirectToAction("Login", "Home");
-            }
-
             var vehicle = await _vehicleService.GetVehicleByIdAsync(vehicleId, jwtToken);
             if (vehicle == null)
             {
@@ -141,13 +121,10 @@ namespace VehicleRegistrationWebApp.Controllers
         {
             _logger.LogDebug($"Vehicle with Id: {vehicleId}");
             _logger.LogInformation($"Delete Vehicle post request");
-            string jwtToken = HttpContext.Session.GetString("Token")!;
-            if (string.IsNullOrEmpty(jwtToken))
-            {
-                return RedirectToAction("Login", "Home");
-            }
 
+            string jwtToken = HttpContext.Session.GetString("Token")!;
             var result = await _vehicleService.DeleteVehicles(vehicleId, jwtToken);
+
             _logger.LogInformation($"vehicle deleted successfully: {result}");
             return RedirectToAction("GetVehiclesDetails", "Vehicle");
         }
@@ -163,13 +140,10 @@ namespace VehicleRegistrationWebApp.Controllers
         {
             _logger.LogInformation("{Controller}.{methodName} method", nameof(VehicleController), nameof(GetVehicleById));
             string jwtToken = HttpContext.Session.GetString("Token")!;
-            if (string.IsNullOrEmpty(jwtToken))
-            {
-                return RedirectToAction("Login", "Home");
-            }
 
             var vehicle = await _vehicleService.GetVehicleByIdAsync(request.VehicleId, jwtToken);
             _logger.LogInformation("Received vehicle using vehicle Id");
+
             if (vehicle == null)
              {
                  return NotFound();

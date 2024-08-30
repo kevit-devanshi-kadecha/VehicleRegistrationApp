@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Serilog;
 using System.Net.Http.Headers;
+using VehicleRegistrationWebApp.Filters;
 using VehicleRegistrationWebApp.Services;
 
 namespace VehicleRegistrationWebApp
@@ -23,8 +24,7 @@ namespace VehicleRegistrationWebApp
             builder.Services.AddHttpClient();
            
             builder.Services.AddDistributedMemoryCache();
-            builder.Services.AddScoped<AccountService>();
-            builder.Services.AddScoped<VehicleService>();
+            
             builder.Services.AddSession( options =>
             {
                 options.IdleTimeout = TimeSpan.FromHours(5);
@@ -32,7 +32,9 @@ namespace VehicleRegistrationWebApp
                 options.Cookie.IsEssential = true;
             });
             builder.Services.AddControllersWithViews();
-
+            builder.Services.AddScoped<AccountService>();
+            builder.Services.AddScoped<VehicleService>();
+            builder.Services.AddScoped<JwtTokenActionFilter>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
