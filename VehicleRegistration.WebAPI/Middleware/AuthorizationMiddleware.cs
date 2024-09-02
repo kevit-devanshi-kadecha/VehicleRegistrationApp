@@ -36,17 +36,6 @@ namespace VehicleRegistration.WebAPI.Middleware
                     await _next(context);
                     return;
                 }
-
-                // Extracting claims
-                var userIdClaim = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-
-                if (string.IsNullOrEmpty(userIdClaim))
-                {
-                    context.Response.StatusCode = StatusCodes.Status403Forbidden;
-                    await context.Response.WriteAsync("Forbidden");
-                    return;
-                }
-
                 await _next(context);
             }
             catch (Exception ex)
