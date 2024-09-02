@@ -1,3 +1,4 @@
+using Manager;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -7,6 +8,7 @@ using System.Reflection;
 using VehicleRegistration.Core.Interfaces;
 using VehicleRegistration.Core.Services;
 using VehicleRegistration.Infrastructure;
+using VehicleRegistration.Manager;
 using VehicleRegistration.WebAPI.Middleware;
 
 namespace VehicleRegistration.WebAPI
@@ -90,7 +92,7 @@ namespace VehicleRegistration.WebAPI
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("Default"));
             });
-
+            builder.Services.AddScoped<IUserManager, UserManager>();
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IVehicleService, VehicleService>();
 

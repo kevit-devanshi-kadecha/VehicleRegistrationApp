@@ -18,7 +18,6 @@ namespace VehicleRegistration.WebAPI.Middleware
             if (controller.Equals("Account"))
             {
                 await _next(context);
-                return;
             }
             try
             {

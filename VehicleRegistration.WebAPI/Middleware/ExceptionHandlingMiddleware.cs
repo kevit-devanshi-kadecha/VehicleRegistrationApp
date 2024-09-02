@@ -18,7 +18,6 @@ namespace VehicleRegistration.WebAPI.Middleware
             try
             {
                 await _next(context);
-                return;
             }
             catch (ArgumentNullException ex)
             {

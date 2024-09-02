@@ -65,7 +65,6 @@ namespace VehicleRegistration.Core.Services
 
             return computedHash == storedPasswordHash;
         }
-
         // for creating password hash and salt 
         public (string PasswordHash, string Salt) CreatePasswordHash(string password)
         {
@@ -89,7 +88,6 @@ namespace VehicleRegistration.Core.Services
             }
             return salt;
         }
-
         private string ComputeHash(string password, byte[] salt)
         {
             using (var sha256 = SHA256.Create())

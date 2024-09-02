@@ -2,11 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using VehicleRegistration.Infrastructure.DataBaseModels;
 using VehicleRegistration.Core.Interfaces;
-using VehicleRegistration.WebAPI.Models;
-using System.Net.Http.Headers;
 using System.Security.Claims;
 using VehicleRegistration.Infrastructure;
 using Microsoft.Data.SqlClient;
+using VehicleRegistration.Manager.ManagerModels;
 
 namespace VehicleRegistration.WebAPI.Controllers
 {
@@ -52,7 +51,7 @@ namespace VehicleRegistration.WebAPI.Controllers
         [HttpPost("add")]
         [ProducesResponseType(201)] // Created 
         [ProducesResponseType(403)]
-        public async Task<IActionResult> AddNewVehicle([FromBody] Vehicle vehicle)
+        public async Task<IActionResult> AddNewVehicle([FromBody] VehicleManagerModel vehicle)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             _logger.LogInformation($"Add vehicle request for userId: {userId}");
@@ -93,7 +92,7 @@ namespace VehicleRegistration.WebAPI.Controllers
         [HttpPut("edit")]
         [ProducesResponseType(404)]
         [ProducesResponseType(401)]
-        public async Task<IActionResult> EditVehicle([FromBody] Vehicle vehicle)
+        public async Task<IActionResult> EditVehicle([FromBody] VehicleManagerModel vehicle)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             _logger.LogInformation($"Edit vehicle Details request by user with userId: {userId}");
