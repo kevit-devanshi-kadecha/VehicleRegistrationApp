@@ -11,12 +11,9 @@
     <h1>@ViewData["Title"]</h1>
     <span>
         <a asp-controller="Vehicle" asp-action="GetVehiclesExcel" class="ml btn btn-light border-3 align-content-end">Download ExcelFile</a>
-        
-        <form method="post" enctype="multipart/form-data">
-            <button>
-                <a type="file" name="file" class="form-control ml btn btn-dark border-3" asp-area="" asp-controller="Home" asp-action="ProfileImage">Upload ProfileImage</a>
-            </button>
-        </form>
+        <button>
+            <a class="ml btn btn-dark border-3" asp-area="" asp-controller="Home" asp-action="ProfileImage">Upload ProfileImage</a>
+        </button>
     </span>
 </div>
 
