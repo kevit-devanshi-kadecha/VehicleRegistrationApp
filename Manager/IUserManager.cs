@@ -12,5 +12,7 @@ namespace VehicleRegistration.Manager
     {
         Task<UserManagerModel> NewUser(UserManagerModel user);
         Task<(bool isAuthenticated, string message, string jwtToken, DateTime tokenExpiration)> LoginUser(LoginManagerModel loginUser);
+        Task<bool> IsUserNameExistsAsync(string userName);
+        Task<bool> IsUserEmailExistsAsync(string email);
     }
 }

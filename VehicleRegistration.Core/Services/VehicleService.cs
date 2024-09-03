@@ -3,6 +3,7 @@ using VehicleRegistration.Infrastructure.DataBaseModels;
 using VehicleRegistration.Core.Interfaces;
 using VehicleRegistration.Infrastructure;
 using Microsoft.Extensions.Logging;
+using System.Security.Claims;
 
 namespace VehicleRegistration.Core.Services
 {

@@ -149,5 +149,13 @@ namespace VehicleRegistrationWebApp.Controllers
             _logger.LogInformation($"Vehicle data with vehicle number: {vehicle.VehicleNumber}");
             return View(vehicle);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetVehiclesExcel()
+        {
+            string jwtToken = HttpContext.Session.GetString("Token")!;
+            MemoryStream memoryStream = await _vehicleService.GetVehiclesExcel(jwtToken);
+            return File(memoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Vehicles.xlsx");
+        }
     }
 }

@@ -67,38 +67,23 @@ namespace VehicleRegistration.WebAPI.Controllers
         /// <param name="login"></param>
         /// <returns></returns>
         [HttpPost("login")]
-        public async Task<IActionResult> Login(LoginManagerModel login)
+        public async Task<IActionResult> Login([FromBody] LoginManagerModel login)
         {
             _logger.LogInformation("API {controllerName}.{methodName} method", nameof(AccountController), nameof(Login));
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            try
+            var (isAuthenticated, message, token, expiration) = await _userManager.LoginUser(login);
+
+            if (!isAuthenticated)
+                return Unauthorized("Invalid credentials");
+
+            return Ok(new
             {
-                if (Convert.ToBoolean(await _userManager.LoginUser(login)))
-                {
-                    return Unauthorized("Invalid credentials");
-                }
-                else
-                {
-                    var (isAuthenticated, message, jwtToken, tokenExpiration) = await _userManager.LoginUser(login);
-                    if (!isAuthenticated)
-                    {
-                        return Unauthorized(message);
-                    }
-                    return Ok(new
-                    {
-                        Message = message,
-                        JwtToken = jwtToken,
-                        TokenExpiration = tokenExpiration
-                    });
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "_UserManager : Something went wrong while login up the user.");
-                throw;
-            }
+                Message = "Logged In Successfully",
+                JwtToken = token,
+                TokenExpiration = expiration
+            });
         }
     }
 }

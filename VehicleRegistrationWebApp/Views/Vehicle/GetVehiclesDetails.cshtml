@@ -7,7 +7,15 @@
 <div>
     @ViewBag.Message
 </div>
-<h1>@ViewData["Title"]</h1>
+<div>
+    <h1>@ViewData["Title"]</h1>
+    <span>
+        <a asp-controller="Vehicle" asp-action="GetVehiclesExcel" class="ml btn btn-light border-3 align-content-end">Download ExcelFile</a>
+        <button>
+            <a class="ml btn btn-dark border-3" asp-area="" asp-controller="Home" asp-action="ProfileImage">Upload ProfileImage</a>
+        </button>
+    </span>
+</div>
 
 <table class="table table-striped">
     <thead>

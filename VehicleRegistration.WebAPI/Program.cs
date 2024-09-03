@@ -92,7 +92,9 @@ namespace VehicleRegistration.WebAPI
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("Default"));
             });
+            builder.Services.AddHttpContextAccessor();
             builder.Services.AddScoped<IUserManager, UserManager>();
+            builder.Services.AddScoped<IVehicleManager, VehicleManager>();
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IVehicleService, VehicleService>();
 
