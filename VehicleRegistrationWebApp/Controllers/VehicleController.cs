@@ -22,11 +22,12 @@ namespace VehicleRegistrationWebApp.Controllers
             _vehicleService = vehicleService;
             _logger = logger;
         }
+        
         [HttpGet("getVehicles")]
-
-        public async Task<IActionResult> GetVehiclesDetails()
+        public async Task<IActionResult> GetVehiclesDetails(string imagePath)
         {
             _logger.LogInformation("{Controller}.{methodName} method", nameof(VehicleController), nameof(GetVehiclesDetails));
+            ViewBag.ImagePath = imagePath;
             string jwtToken = HttpContext.Session.GetString("Token")!;
 
             var vehicles = await _vehicleService.GetVehicles(jwtToken);

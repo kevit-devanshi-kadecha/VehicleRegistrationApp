@@ -85,6 +85,28 @@ namespace VehicleRegistrationWebApp.Controllers
             return View();
         }
 
+        [HttpPost]
+        public async Task<IActionResult> UploadImage(IFormFile file)
+        {
+            if (file == null)
+            {
+                return ViewBag.Message = "File not uploaded";
+            }
+            else
+            {
+                string jwtToken = HttpContext.Session.GetString("Token")!;
+                var result = await _accountService.UploadFileAsync(file, jwtToken);
+                if (result.success)
+                {
+                    return RedirectToAction("GetVehiclesDetails", "Vehicle", new { imagePath = result.FilePath });
+                }
+                else
+                {
+                    return RedirectToAction("GetVehiclesDetails", "Vehicle");
+                }
+            }
+        }
+
         public IActionResult Privacy()
         {
             return View();
@@ -97,3 +119,4 @@ namespace VehicleRegistrationWebApp.Controllers
         }
     }
 }
+

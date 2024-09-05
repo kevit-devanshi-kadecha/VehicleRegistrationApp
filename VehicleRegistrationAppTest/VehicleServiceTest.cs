@@ -7,7 +7,6 @@ using VehicleRegistration.Core.Services;
 using VehicleRegistration.Infrastructure;
 using VehicleRegistration.Infrastructure.DataBaseModels;
 using VehicleRegistration.WebAPI.Controllers;
-using VehicleRegistration.WebAPI.Models;
 
 namespace VehicleRegistrationAppTest
 {

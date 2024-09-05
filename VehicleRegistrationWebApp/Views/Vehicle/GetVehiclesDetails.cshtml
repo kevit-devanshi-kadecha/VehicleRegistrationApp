@@ -9,13 +9,21 @@
 </div>
 <div>
     <h1>@ViewData["Title"]</h1>
-    <span>
-        <a asp-controller="Vehicle" asp-action="GetVehiclesExcel" class="ml btn btn-light border-3 align-content-end">Download ExcelFile</a>
-        <button>
-            <a class="ml btn btn-dark border-3" asp-area="" asp-controller="Home" asp-action="ProfileImage">Upload ProfileImage</a>
-        </button>
-    </span>
+    @if (ViewBag.ImagePath != null)
+    {
+        <div style="float: right; margin-right: 10px;">
+            <img src="@ViewBag.ImagePath" alt="Uploaded Image" style="max-width: 200px; max-height: 200px;" />
+        </div>
+    }
 </div>
+<span>
+    <a asp-controller="Vehicle" asp-action="GetVehiclesExcel" class="ml btn btn-light border-3 align-content-end">Download ExcelFile</a>
+    <form method="post" enctype="multipart/form-data" asp-action="UploadImage" asp-controller="Home">
+        <input type="file" name="file" id="fileInput" />
+        <button type="submit">Upload</button>
+    </form>
+</span>
+
 
 <table class="table table-striped">
     <thead>

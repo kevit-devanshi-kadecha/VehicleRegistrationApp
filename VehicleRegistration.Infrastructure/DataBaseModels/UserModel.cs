@@ -16,7 +16,9 @@ namespace VehicleRegistration.Infrastructure.DataBaseModels
         [MaxLength(256)]
         public string PasswordHash { get; set; }
         [MaxLength(32)]
-        public string Salt {  get; set; }   
+        public string Salt {  get; set; }
+        [MaxLength(300)]
+        public string? ProfileImagepath { get; set; }
         public ICollection<VehicleModel> Vehicles { get; set; }
     }
 }

@@ -97,6 +97,7 @@ namespace VehicleRegistration.WebAPI
             builder.Services.AddScoped<IVehicleManager, VehicleManager>();
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IVehicleService, VehicleService>();
+            builder.Services.AddScoped<IFileService, FileService>();
 
             // Service for Jwt Token 
             builder.Services.AddSingleton<IJwtService, JwtService>();

@@ -1,7 +1,10 @@
 ﻿using Azure.Messaging;
 using Manager;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Globalization;
+using System.Security.Claims;
 using VehicleRegistration.Core.Interfaces;
 using VehicleRegistration.Core.Services;
 using VehicleRegistration.Manager;
@@ -17,8 +20,8 @@ namespace VehicleRegistration.WebAPI.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IUserManager _userManager;
-        private readonly IUserService _userService;
         private readonly IJwtService _jwttokenService;
+        private readonly IConfiguration _configuration;
         private readonly ILogger<AccountController> _logger;   
         
         /// <summary>
@@ -26,10 +29,10 @@ namespace VehicleRegistration.WebAPI.Controllers
         /// </summary>
         /// <param name="userService"></param>
         /// <param name="jwtService"></param>
-        public AccountController(IUserManager userManager, IUserService userService, IJwtService jwtService, ILogger<AccountController> logger)
+        public AccountController(IUserManager userManager, IJwtService jwtService,IConfiguration configuration, ILogger<AccountController> logger)
         {
             _userManager = userManager;
-            _userService = userService;
+            _configuration = configuration;
             _jwttokenService = jwtService;
             _logger = logger;
         }
@@ -85,6 +88,62 @@ namespace VehicleRegistration.WebAPI.Controllers
                 TokenExpiration = expiration
             });
         }
+
+        [HttpPost("uploadImage")]
+        public async Task<IActionResult> UploadProfileImage(IFormFile file)
+        {
+            _logger.LogInformation("API {controllerName}.{methodName} method", nameof(AccountController), nameof(UploadProfileImage));
+            try
+            {
+                if (file != null)
+                {
+                    var imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ProfileImages"); 
+                    if (!Directory.Exists(imagePath))
+                    {
+                        Directory.CreateDirectory(imagePath);
+                    }
+
+                    var fileName = Path.GetFileName(file.FileName);
+
+                    var userId = int.Parse(User.FindFirst("UserId")?.Value);
+
+                    var user = await _userManager.GetUser(userId);
+
+                    var (success, filePath) = await _userManager.UploadImageAsync(fileName, user);
+
+                    var fullFilePath = Path.Combine(imagePath, fileName);
+
+                    using (var stream = new FileStream(fullFilePath, FileMode.Create))
+                    {
+                        await file.CopyToAsync(stream);
+                    }
+
+                    if(success && !string.IsNullOrEmpty(filePath))
+                    {
+                        var responsePath = fullFilePath;
+                        return Ok(new
+                        {
+                            Path = responsePath
+                        });
+                    }
+                    else
+                    {
+                        return StatusCode(500, "Failed to upload image to database");
+                    }
+                }
+                else
+                {
+                    return BadRequest("No file uploaded");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occured while uploading profile image");
+                return StatusCode(500, "Internal server error");
+            }
+        }
     }
 }
+
+
 

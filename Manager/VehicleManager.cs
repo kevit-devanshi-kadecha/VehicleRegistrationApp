@@ -45,7 +45,7 @@ namespace VehicleRegistration.Manager
 
         public async Task<VehicleManagerModel> AddVehicle(VehicleManagerModel newVehicle)
         {
-            var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userId = _httpContextAccessor.HttpContext.User.FindFirst("UserId")?.Value;
 
             var vehicleModel = new VehicleModel
             {
@@ -78,7 +78,7 @@ namespace VehicleRegistration.Manager
 
         public async Task<VehicleManagerModel> EditVehicle(VehicleManagerModel vehicle)
         {
-            var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userId = _httpContextAccessor.HttpContext.User.FindFirst("UserId")?.Value;
             var vehicleModel = new VehicleModel
             {
                 VehicleId = vehicle.VehicleId,

@@ -37,7 +37,7 @@ namespace VehicleRegistration.WebAPI.Controllers
         [HttpGet("getAllVehicles")]
         public async Task<IActionResult> GetAllVehicles()
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userId = User.FindFirst("UserId")?.Value;
             _logger.LogInformation($"Get all vehicles associated with user: {userId}");
             var vehicles = await _vehicleManager.GetVehicleDetails(userId);
             return Ok(vehicles);
@@ -72,7 +72,7 @@ namespace VehicleRegistration.WebAPI.Controllers
         /// </summary>
         /// <param name="vehicle"></param>
         /// <returns></returns>
-        [HttpPut("edit")]
+        [HttpPost("edit")]
         [ProducesResponseType(404)]
         [ProducesResponseType(401)]
         public async Task<IActionResult> EditVehicle([FromBody] VehicleManagerModel vehicle)
