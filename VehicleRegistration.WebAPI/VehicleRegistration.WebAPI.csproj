@@ -34,6 +34,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Manager\VehicleRegistration.Manager.csproj" />
     <ProjectReference Include="..\VehicleRegistration.Infrastructure\VehicleRegistration.Infrastructure.csproj" />
+    <ProjectReference Include="..\VehicleRegistration.Worker\VehicleRegistration.Worker.csproj" />
   </ItemGroup>
 
 </Project>

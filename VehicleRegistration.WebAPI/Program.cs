@@ -10,6 +10,7 @@ using VehicleRegistration.Core.Services;
 using VehicleRegistration.Infrastructure;
 using VehicleRegistration.Manager;
 using VehicleRegistration.WebAPI.Middleware;
+using VehicleRegistration.Worker.AppStart;
 
 namespace VehicleRegistration.WebAPI
 {
@@ -98,6 +99,9 @@ namespace VehicleRegistration.WebAPI
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IVehicleService, VehicleService>();
             builder.Services.AddScoped<IFileService, FileService>();
+
+            // class for job 
+            builder.Services.AddDependency();
 
             // Service for Jwt Token 
             builder.Services.AddSingleton<IJwtService, JwtService>();
