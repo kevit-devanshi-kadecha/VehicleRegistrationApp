@@ -15,11 +15,11 @@ namespace VehicleRegistration.WebAPI.Middleware
         public async Task InvokeAsync(HttpContext context)
         {
             var controller = context.Request.RouteValues["controller"]?.ToString();
-            if (controller.Equals("Account"))
+            if (controller != null && controller.Equals("Account"))
             {
                 await _next(context);
                 return;
-            }
+            }    
             try
             {
                 var user = context.User;
