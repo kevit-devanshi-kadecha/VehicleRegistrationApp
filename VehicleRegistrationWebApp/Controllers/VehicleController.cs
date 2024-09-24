@@ -31,6 +31,10 @@ namespace VehicleRegistrationWebApp.Controllers
             string jwtToken = HttpContext.Session.GetString("Token")!;
 
             var vehicles = await _vehicleService.GetVehicles(jwtToken);
+             if (TempData["Message"] != null)
+             {
+                 ViewBag.Message = TempData["Message"];
+             }
             _logger.LogInformation("Vehicles Received");
             return View(vehicles);
         }
@@ -55,8 +59,8 @@ namespace VehicleRegistrationWebApp.Controllers
             return RedirectToAction("GetVehiclesDetails");
         }
 
-        [HttpGet("editVehicle/{vehicleId}")]
-        public async Task<IActionResult> EditVehicleDetails([FromRoute] Guid vehicleId)
+        [HttpGet]
+        public async Task<IActionResult> EditVehicleDetails(Guid vehicleId)
         {
             _logger.LogDebug($"Edit request with vehicleId: {vehicleId}");
             _logger.LogInformation("{Controller}.{methodName} Get method", nameof(VehicleController), nameof(EditVehicleDetails));
@@ -75,7 +79,7 @@ namespace VehicleRegistrationWebApp.Controllers
         }
 
         [HttpPost("editVehicle")]
-        public async Task<IActionResult> EditVehicleDetails([FromForm] VehicleViewModel model)
+        public async Task<IActionResult> EditVehicleDetails(VehicleViewModel model)
         {
             _logger.LogInformation("{Controller}.{methodName} method", nameof(VehicleController), nameof(EditVehicleDetails));
             string jwtToken = HttpContext.Session.GetString("Token")!;
@@ -90,6 +94,7 @@ namespace VehicleRegistrationWebApp.Controllers
 
             if (result == "Vehicle Details Edited Successfully")
             {
+                TempData["Message"] = "Vehicle edited successfully!";
                 return RedirectToAction("GetVehiclesDetails");
             }
             else if (result == "No modifications applied")
@@ -125,7 +130,15 @@ namespace VehicleRegistrationWebApp.Controllers
 
             string jwtToken = HttpContext.Session.GetString("Token")!;
             var result = await _vehicleService.DeleteVehicles(vehicleId, jwtToken);
-
+             if (result == "Vehicle Deleted successfully")
+             {
+                 TempData["Message"] = "Vehicle deleted successfully!";
+                 return RedirectToAction("GetVehiclesDetails");
+             }
+             else
+             {
+                 TempData["Message"] = "Failed to delete the vehicle.";
+             }
             _logger.LogInformation($"vehicle deleted successfully: {result}");
             return RedirectToAction("GetVehiclesDetails", "Vehicle");
         }
