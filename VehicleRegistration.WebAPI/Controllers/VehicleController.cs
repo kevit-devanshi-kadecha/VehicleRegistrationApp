@@ -72,9 +72,10 @@ namespace VehicleRegistration.WebAPI.Controllers
         /// </summary>
         /// <param name="vehicle"></param>
         /// <returns></returns>
-        [HttpPost("edit")]
+        [HttpPut("edit")]
         [ProducesResponseType(404)]
         [ProducesResponseType(401)]
+        [ProducesResponseType(200)]
         public async Task<IActionResult> EditVehicle([FromBody] VehicleManagerModel vehicle)
         {
             _logger.LogInformation($"Edit vehicle Details");
